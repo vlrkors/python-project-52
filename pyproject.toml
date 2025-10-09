@@ -1,0 +1,16 @@
+[project]
+name = "hexlet-code"
+version = "0.1.0"
+description = "Task Manager (Hexlet) — Django project prepared for Render deploy"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Hexlet Student"}]
+dependencies = [
+    "Django>=5.0,<6.0",
+    "gunicorn>=22.0.0",
+    "dj-database-url>=2.1.0",
+    "python-dotenv>=1.0.1",
+    "psycopg[binary]>=3.2.0",
+]
+
+[tool.uv]
