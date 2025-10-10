@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html class='h-100' data-bs-theme='light' lang='ru' prefix='og: https://ogp.me/ns#'>
+<head>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+<meta content='IE=Edge' http-equiv='X-UA-Compatible'>
+<script>
+  window.addEventListener("vite:preloadError", (event) => {
+    console.log('vite:preloadError');
+    window.location.reload(); // for example, refresh the page
+  });
+</script>
+
+<script>
+//<![CDATA[
+window.gon={};gon.fired_events={};gon.vk_id={"client_id":"51586979"};gon.yandex_id={"client_id":"88d071f1d3384eb4bd1deb37910235c7"};gon.is_bot=false;gon.applications={};gon.current_user={"id":null,"email":null,"sanitized_phone_number":"","phone_number_e164":null,"username":null,"created_at":"2025-10-09T08:36:41.962Z","created_at_as_timestamp":1759999001,"last_viewed_notification_id":null,"paid_days_count":0,"first_name":"","last_name":"","full_name":"","birthday":null,"city":null,"country":null,"text":" ()","is_guest":true,"is_mentor":false,"is_tutor":false,"is_hexlet_employee":false,"current_company":null,"can_use_paid_features":false,"current_program":null,"is_active_group_member":false,"is_active_async_group_member":false,"current_group_type":null,"current_group_program":null,"current_curator":{"email":null,"full_name":null},"current_tutor":{"full_name":null},"last_event_data":null,"gender":null,"finished_lessons_count":null};gon.token="iZbGCN8aV0R-P76R07G2CUZ29Kouurlab9cSfsX-U8v75dQHdyfw8-WXHG6Q4fhTxOumrGVS_Y5x27UZyqMpCg";gon.events=["blog_post_moderation_submitted","content_course_finished","course_finished","course_started","custom_payment_paid","email_confirmed","lead_created","lesson_finished","lesson_started","product_payment_paid","program_started","project_finished","project_member_review_approved","project_sent_to_review","project_started","send_to_work_chat","show_lead_modal","sign_up_failed","signed_in","signed_out","signed_up","signed_up_program_started","solution_viewed","subscription_cancelled","subscription_created","subscription_deleted","subscription_paid","subscription_price_changed","subscription_product_changed","team_created","test_event","today_birthday","tutor_assigned","tutorship_application_created","user_email_changed","user_stucked_in_group"];gon.locale="ru";gon.language="ru";gon.theme="light";gon.rails_env="production";gon.mobile=false;gon.google={"analytics_key":"UA-1360700-51","optimize_key":"GTM-5QDVFPF"};gon.captcha={"google_v3_site_key":"6LenGbgZAAAAAM7HbrDbn5JlizCSzPcS767c9vaY","yandex_site_key":"ysc1_Vyob5ZPPUdPBsu0ykt8bVFdzsfpoVjQChLGl2b4g19647a89","verification_failed":null};gon.social_signin=false;gon.typoreporter_google_form_id="1FAIpQLSeibfGq-KvWQ2Fyru-zkFFRVTLBuzXAHAoEyN1p49FtDmNoNA";
+//]]>
+</script>
+<title>Регистрация</title>
+<link rel="canonical" href="https://ru.hexlet.io/u/new">
+<meta name="robots" content="noindex, nofollow">
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="YjA1ijOjzdTTmdi1EXZjJA9QNzC5pirhJs_mfuh6k8IQQyeFm55qY0gxekpSJi1-jc1lNvJObjU4w0EZ5yfpAw" />
+
+<link href='/favicon.ico' rel='icon' sizes='any'>
+<link href='/favicon.svg' rel='icon' type='image/svg+xml'>
+<link href='/apple-touch-icon.png' rel='apple-touch-icon'>
+<link href='/manifest.webmanifest' rel='manifest'>
+
+<meta content='aa2vrdtq64dub8knuf83lwywit311w' name='facebook-domain-verification'>
+
+
+
+<link rel="stylesheet" href="/vite/assets/application-Cp0LQ_yf.css" />
+<script src="/vite/assets/application-Ceqj18QG.js" crossorigin="anonymous" type="module"></script><link rel="modulepreload" href="/vite/assets/bootstrap.esm-sTo44Pea.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/js.cookie-pCBBsYX8.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/_commonjsHelpers-BUFWF0wC.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/configure-HDnloo5r.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/gon-I1cC_3CT.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/autocomplete-Be6cjN6s.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/routes-BLPmjOSm.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/createPopper-CduuKR3U.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/index-BNh45wjZ.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/debounce-B9jNGj6E.js" as="script" crossorigin="anonymous"><link rel="stylesheet" href="/vite/assets/application-Cp0LQ_yf.css" media="screen" />
+
+<script>
+//<![CDATA[
+(function() {
+  const options = {
+    dsn: 'https://d9665b39f594bfd43e2ad3b09863df18@sentry.hexlet.io/5',
+    environment: 'production',
+    release: 'v9992',
+    initialScope: {
+      user: gon.current_user
+    },
+    ignoreErrors: [
+      'top.GLOBALS', // Random plugins/extensions
+      'VK is',
+      'VK.Retargeting is ',
+      "Can't find variable: VK",
+      'pktAnnotationHighlighter',
+      'amplitude',
+      'google_tag_manager',
+      'Unexpected keyword',
+      'illegal character',
+      'Unexpected identifier',
+      'Illegal invocation',
+      'missing = in const declaration',
+      'Loading chunk 692 failed',
+      'Non-Error promise rejection captured with keys: code, status',
+    ],
+    allowUrls: [/https?:\/\/((cdn|cdn2|ru)\.)?hexlet.io/],
+    beforeSend(event, hint) {
+      const stack = hint?.originalException?.stack || '';
+      const errorInitiator = stack
+        .split('\n')
+        .map((line) => line.trim())
+        .find((line) => line.startsWith('at'));
+      const causedByConsole = errorInitiator
+        ? errorInitiator.includes('<anonymous>:')
+        : false;
+      return causedByConsole ? null : event;
+    },
+  };
+  const key = options.dsn.replace('https://', '').split('@')[0];
+
+  !function(n,e,r,t,o,i,a,c,s){for(var u=s,f=0;f<document.scripts.length;f++)if(document.scripts[f].src.indexOf(i)>-1){u&&"no"===document.scripts[f].getAttribute("data-lazy")&&(u=!1);break}var p=[];function l(n){return"e"in n}function d(n){return"p"in n}function _(n){return"f"in n}var v=[];function y(n){u&&(l(n)||d(n)||_(n)&&n.f.indexOf("capture")>-1||_(n)&&n.f.indexOf("showReportDialog")>-1)&&L(),v.push(n)}function h(){y({e:[].slice.call(arguments)})}function g(n){y({p:n})}function E(){try{n.SENTRY_SDK_SOURCE="loader";var e=n[o],i=e.init;e.init=function(o){n.removeEventListener(r,h),n.removeEventListener(t,g);var a=c;for(var s in o)Object.prototype.hasOwnProperty.call(o,s)&&(a[s]=o[s]);!function(n,e){var r=n.integrations||[];if(!Array.isArray(r))return;var t=r.map((function(n){return n.name}));n.tracesSampleRate&&-1===t.indexOf("BrowserTracing")&&(e.browserTracingIntegration?r.push(e.browserTracingIntegration({enableInp:!0})):e.BrowserTracing&&r.push(new e.BrowserTracing));(n.replaysSessionSampleRate||n.replaysOnErrorSampleRate)&&-1===t.indexOf("Replay")&&(e.replayIntegration?r.push(e.replayIntegration()):e.Replay&&r.push(new e.Replay));n.integrations=r}(a,e),i(a)},setTimeout((function(){return function(e){try{"function"==typeof n.sentryOnLoad&&(n.sentryOnLoad(),n.sentryOnLoad=void 0)}catch(n){console.error("Error while calling `sentryOnLoad` handler:"),console.error(n)}try{for(var r=0;r<p.length;r++)"function"==typeof p[r]&&p[r]();p.splice(0);for(r=0;r<v.length;r++){_(i=v[r])&&"init"===i.f&&e.init.apply(e,i.a)}m()||e.init();var t=n.onerror,o=n.onunhandledrejection;for(r=0;r<v.length;r++){var i;if(_(i=v[r])){if("init"===i.f)continue;e[i.f].apply(e,i.a)}else l(i)&&t?t.apply(n,i.e):d(i)&&o&&o.apply(n,[i.p])}}catch(n){console.error(n)}}(e)}))}catch(n){console.error(n)}}var O=!1;function L(){if(!O){O=!0;var n=e.scripts[0],r=e.createElement("script");r.src=a,r.crossOrigin="anonymous",r.addEventListener("load",E,{once:!0,passive:!0}),n.parentNode.insertBefore(r,n)}}function m(){var e=n.__SENTRY__,r=void 0!==e&&e.version;return r?!!e[r]:!(void 0===e||!e.hub||!e.hub.getClient())}n[o]=n[o]||{},n[o].onLoad=function(n){m()?n():p.push(n)},n[o].forceLoad=function(){setTimeout((function(){L()}))},["init","addBreadcrumb","captureMessage","captureException","captureEvent","configureScope","withScope","showReportDialog"].forEach((function(e){n[o][e]=function(){y({f:e,a:arguments})}})),n.addEventListener(r,h),n.addEventListener(t,g),u||setTimeout((function(){L()}))}(window,document,"error","unhandledrejection","Sentry",key,'https://browser.sentry-cdn.com/8.55.0/bundle.min.js',options,true);
+})();
+
+
+
+//]]>
+</script>
+<script>
+//<![CDATA[
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+  m[i].l=1*new Date();
+  for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+ym(25559621, "init", {
+  clickmap:true,
+  trackLinks:true,
+  accurateTrackBounce:true,
+  webvisor: Math.random() < 0.1,
+});
+
+ym(25559621, 'getClientID', function(clientID) {
+  window.ymClientId = clientID
+});
+
+//]]>
+</script><noscript>
+<div>
+<img alt='' src='https://mc.yandex.ru/watch/25559621' style='position:absolute; left:-9999px;'>
+</div>
+</noscript>
+
+<script src="/vite/assets/analytic_events-CesTStTS.js" crossorigin="anonymous" type="module"></script>
+<!-- Google Tag Manager -->
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-WK88TH');
+</script>
+<!-- End Google Tag Manager -->
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Hexlet","url":"https://ru.hexlet.io/","sameAs":["https://www.facebook.com/Hexlet","https://www.youtube.com/user/HexletUniversity","https://twitter.com/HexletHQ","https://soundcloud.com/hexlet"],"legalName":"ООО «Хекслет Рус»","address":"108813, г. Москва, вн.тер.г. поселение Московский, г. Московский, ул. Солнечная, д. 3А, стр. 1, помещ. 20Б/3","telephone":"+7 495 085 21 62","logo":{"@type":"ImageObject","url":"https://ru.hexlet.io/images/hexlet_logo.png"}}</script>
+
+
+
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+<iframe height='0' src='https://www.googletagmanager.com/ns.html?id=GTM-WK88TH' style='display:none;visibility:hidden' width='0'></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+
+
+<script src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js" async="async"></script>
+
+
+<div class='sticky-top sticky-lg-top'>
+<header class='hexlet-header'>
+<div class='x-container-xxxl px-3 navbar navbar-expand-lg'>
+<a class="navbar-brand pt-lg-0 pb-lg-2 me-lg-2 me-xl-3" href="/"><img alt='Логотип Хекслета' height='24' src='https://ru.hexlet.io/vite/assets/logo_ru_light-BpiEA1LT.svg' width='96'>
+</a><button aria-controls='navbar' aria-expanded='false' aria-label='Меню' class='navbar-toggler border-0 x-btn-focus-visible' data-bs-target='#navbar' data-bs-toggle='collapse'>
+<span class='navbar-toggler-icon'></span>
+</button>
+<div class='navbar-collapse py-3 py-lg-0 collapse' id='navbar'>
+<ul class='navbar-nav flex-lg-row align-items-lg-center order-lg-last'>
+<li class='me-2'>
+<span data-target="_self" class="nav-link text-body external-link" data-href="/u/new?back_to=https%3A%2F%2Fru.hexlet.io%2Fprojects%2F52%2Fmembers%2F47985%3Fstep%3D1" role="button"><span class='bi bi-person me-1'></span>
+<span class='d-none d-sm-inline-block'>Регистрация</span>
+</span></li>
+<li>
+<span data-target="_self" class="nav-link text-body external-link" data-href="https://ru.hexlet.io/session/new?back_to=https%3A%2F%2Fru.hexlet.io%2Fprojects%2F52%2Fmembers%2F47985%3Fstep%3D1" role="button"><span class='bi bi-key me-1'></span>
+<span class='d-none d-sm-inline-block'>Вход</span>
+</span></li>
+</ul>
+<ul class='navbar-nav me-auto'>
+<li class='px-xl-1'>
+<a class="nav-link text-body" href="/courses">Все курсы</a>
+</li>
+<li class='dropdown px-xl-1'>
+<button aria-haspopup class='btn nav-link text-body' data-bs-toggle='dropdown' type='button'>
+Решения
+<span class='bi bi-chevron-down align-middle ms-1'></span>
+</button>
+<ul class='dropdown-menu dropdown-menu-start' style='min-width: 300px;'>
+<li class='mb-2'>
+<span class="dropdown-item d-flex external-link" rel="noopener noreferrer nofollow" data-href="https://b2b.hexlet.io" data-target="_blank" role="button"><i class='bi bi-people me-2 fs-4'></i>
+<div>
+<div class='fw-bold'>Компаниям</div>
+<div class='small text-wrap'>Прокачаем ваших сотрудников и дадим аналитику</div>
+</div>
+</span></li>
+<li class='mb-2'>
+<span class="dropdown-item d-flex external-link" rel="noopener noreferrer nofollow" data-href="https://hexly.ru/" data-target="_blank" role="button"><i class='bi bi-buildings fs-4 me-2'></i>
+<div>
+<div class='fw-bold'>Колледж</div>
+<div class='small text-wrap'>Дадим качественное образование (СПО)</div>
+</div>
+</span></li>
+<li>
+<span class="dropdown-item d-flex external-link" rel="noopener noreferrer nofollow" data-href="https://hexlyschool.ru/" data-target="_blank" role="button"><i class='bi bi-book fs-4 me-2'></i>
+<div>
+<div class='fw-bold'>Частная школа</div>
+<div class='small text-wrap'>Обеспечим детям комфортную среду</div>
+</div>
+</span></li>
+</ul>
+</li>
+<li class='dropdown px-xl-1'>
+<button aria-haspopup class='btn nav-link text-body' data-bs-toggle='dropdown' type='button'>
+О Хекслете
+<span class='bi bi-chevron-down align-middle ms-1'></span>
+</button>
+<ul class='dropdown-menu bg-body'>
+<li>
+<a class="dropdown-item py-2" href="/pages/about">О нас
+</a></li>
+<li>
+<a class="dropdown-item py-2" href="/blog">Блог
+</a></li>
+<li>
+<span class="dropdown-item py-2 external-link" data-href="https://special.hexlet.io/hse-research" role="button">Результаты (Исследование)
+</span></li>
+<li>
+<span class="dropdown-item py-2 external-link" data-href="https://career.hexlet.io" role="button">Хекслет Карьера
+</span></li>
+<li>
+<a class="dropdown-item py-2" href="/testimonials">Отзывы студентов
+</a></li>
+<li>
+<span class="dropdown-item py-2 external-link" data-href="https://t.me/hexlet_help_bot" role="button">Поддержка (В ТГ)
+</span></li>
+<li>
+<span class="dropdown-item py-2 external-link" data-href="https://special.hexlet.io/referal-program/?promo_creative=priglasite-druzei&amp;promo_name=referal-program&amp;promo_position=promo_position&amp;promo_start=010724&amp;promo_type=link" role="button">Реферальная программа
+</span></li>
+<li>
+<span class="dropdown-item py-2 external-link" data-href="https://special.hexlet.io/certificate" role="button">Подарочные сертификаты
+</span></li>
+<li>
+<span class="dropdown-item py-2 external-link" data-href="https://hh.ru/employer/4307094" role="button">Вакансии
+</span></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</header>
+</div>
+<div class='x-container-xxxl'>
+
+
+</div>
+
+<main class='mb-6 min-vh-100'>
+<div class='container'>
+<div class='row justify-content-center'>
+<div class='col-md-8 col-lg-6 py-5'>
+<div class='pb-lg-5'>
+<div class='card shadow-sm'>
+<div class='card-body p-lg-5'>
+<h1 class='mb-4 fw-light'>Регистрация</h1>
+<div class='pt-lg-3'>
+<form class="simple_form new_user_sign_up_form" id="new_user_sign_up_form" novalidate="novalidate" action="/u?back_to=https%3A%2F%2Fru.hexlet.io%2Fprojects%2F52%2Fmembers%2F47985%3Fstep%3D1" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="LhqlwQSinx7XufZaf4MtRkIlMt4ulaIyKjJOurFiQyusl7J5RpXdfFLbUnrA9do46zikKO6Q7J0dSA0S2AVe2Q" autocomplete="off" /><input type="hidden" name="signup_source" id="signup_source" value="sign_up_page" autocomplete="off" />
+<div class="honey_1759999001"><style media="screen">.honey_1759999001 {position:absolute!important;height:1px;width:1px;overflow:hidden;}</style><label for="user_sign_up_form_honey">Игнорируйте это поле. Оно нужно только для защиты от ботов.</label><input type="text" name="user_sign_up_form[honey]" id="user_sign_up_form_honey" autocomplete="off" tabindex="-1" /><input type="hidden" name="spinner" value="1a345cc3e6a7af98225020c01802e26d" autocomplete="off" /></div>
+<div class="mb-2 email required user_sign_up_form_email"><label class="form-label email required" for="user_email">Электронная почта <span title="обязательно">*</span></label><input class="form-control string email required" id="user_email" autocomplete="username" autofocus="autofocus" type="email" name="user_sign_up_form[email]" /></div>
+<div class="mb-2 string optional user_sign_up_form_first_name"><label class="form-label string optional" for="user_sign_up_form_first_name">Имя</label><input class="form-control string optional" type="text" name="user_sign_up_form[first_name]" id="user_sign_up_form_first_name" /></div>
+<div class="mb-2 password optional user_sign_up_form_password"><label class="form-label password optional" for="new-password">Пароль</label><input class="form-control password optional" id="new-password" autocomplete="new-password" type="password" name="user_sign_up_form[password]" /></div>
+<div class='my-3'>
+<div class='smart-captcha overflow-hidden rounded-3' data-hl='ru' data-sitekey='ysc1_Vyob5ZPPUdPBsu0ykt8bVFdzsfpoVjQChLGl2b4g19647a89' id='captcha-anchor'></div>
+<script src="/vite/assets/smart_captcha-DS8H20k_.js" crossorigin="anonymous" type="module"></script><link rel="modulepreload" href="/vite/assets/gon-I1cC_3CT.js" as="script" crossorigin="anonymous">
+
+
+</div>
+<input type="submit" name="commit" value="Зарегистрироваться" class="btn btn-primary w-100" data-disable-with="Зарегистрироваться" />
+</form></div>
+<div class='mt-3' id='vkid-button-auth'></div>
+<div class='mt-3 overflow-hidden rounded-2' id='yandex-id-button-container'></div>
+
+<div class='mt-3'>
+<div class='small text-body-secondary lh-sm'>
+Отправляя форму, вы принимаете «<a href="/pages/personal_data" class="text-body-secondary" target="_blank" rel="nofollow">Соглашение об обработке персональных данных</a>» и условия «<a href="/pages/offer" class="text-body-secondary" target="_blank" rel="nofollow">Оферты</a>», а также соглашаетесь с «<a href="/pages/tos" class="text-body-secondary" target="_blank" rel="nofollow">Условиями использования</a>»
+
+</div>
+</div>
+</div>
+<div class='card-footer border-top-0 text-center py-4'>
+<div class='py-lg-2'>
+<span class='text-body-secondary'>Уже есть аккаунт?</span>
+<a class="text-body" href="https://ru.hexlet.io/session/new?back_to=https%3A%2F%2Fru.hexlet.io%2Fprojects%2F52%2Fmembers%2F47985%3Fstep%3D1">Войти</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</main>
+<footer class='bg-dark fw-light text-light px-3 py-5'>
+<div class='row small'>
+<div class='col-12 col-sm-6 col-md-3'>
+<div class='h5 mb-3'>Хекслет</div>
+<ul class='list-unstyled'>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/pages/about">О нас</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/testimonials">Отзывы</a>
+</li>
+<li>
+<span class="nav-link link-light py-1 ps-0 external-link" data-href="https://b2b.hexlet.io" role="button">Корпоративное обучение</span>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/blog">Блог</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/qna">Вопросы и ответы</a>
+</li>
+<li>
+<span class="nav-link link-light py-1 ps-0 external-link" data-href="https://help.hexlet.io" data-target="_blank" role="button">Справка</span>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" target="_blank" rel="noopener noreferrer" href="/map">Карта сайта</a>
+</li>
+</ul>
+</div>
+<div class='col-12 col-sm-6 col-md-3'>
+<div class='h5 fw-normal mb-3'>Направления</div>
+<ul class='list-unstyled'>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/courses_devops">DevOps
+</a></li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/courses_data_analytics">Аналитика данных
+</a></li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/courses_backend_development">Бекенд-разработка
+</a></li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/courses_web_development">Веб-разработка
+</a></li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/courses_programming">Программирование
+</a></li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/courses_testing">Тестирование
+</a></li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/courses_front_end_dev">Фронтенд-разработка
+</a></li>
+</ul>
+</div>
+<div class='col-12 col-sm-6 col-md-3'>
+<div class='h5'>Профессии</div>
+<ul class='list-unstyled'>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/php">РНР-разработчик</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/devops-engineer-from-scratch">DevOps-инженер с нуля</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/java">Java-разработчик</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/python">Python-разработчик </a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/data-analytics">Аналитик данных</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/qa-engineer">Инженер по ручному тестированию</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/go">GO-разработчик</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/frontend">Фронтенд-разработчик</a>
+</li>
+</ul>
+</div>
+<div class='col-12 col-sm-6 col-md-3'>
+<div class='h5'>Навыки</div>
+<ul class='list-unstyled'>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/postman">Postman</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/typescript">Typescript</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/spring-boot">Spring Boot</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/docker">Docker</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/python-django-developer">Django</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/js-rest-api">REST API в Node.js</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/php-laravel-developer">Laravel</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/programs/js-react-developer">React</a>
+</li>
+</ul>
+</div>
+</div>
+<hr>
+<div class='row'>
+<div class='col-12 col-sm-4 col-md-2'>
+<div class='fs-4'>
+<ul class='list-unstyled d-flex'>
+<li class='me-3'>
+<a aria-label="Telegram" target="_blank" class="link-light" rel="noopener noreferrer nofollow" href="https://t.me/hexlet_ru"><span class='bi bi-telegram'></span>
+</a></li>
+<li>
+<a aria-label="Youtube" target="_blank" class="link-light" rel="noopener noreferrer nofollow" href="https://www.youtube.com/user/HexletUniversity"><span class='bi bi-youtube'></span>
+</a></li>
+</ul>
+</div>
+<div class='mb-2 d-flex flex-column'>
+<a class="link-light text-decoration-none" rel="nofollow" href="mailto:support@hexlet.io">support@hexlet.io</a>
+<a class="link-light text-decoration-none py-2" target="_blank" href="https://t.me/hexlet_help_bot">t.me/hexlet_help_bot</a>
+</div>
+<ul class='list-unstyled d-flex'>
+<li class='me-3'>
+<span class="link-light text-decoration-none opacity-50 x-font-size-18 external-link" rel="nofollow" data-href="https://hexlet.io/locale/switch?new_locale=en" role="button"><span class='my-auto'>EN</span>
+</span></li>
+<li class='me-3'>
+<span class="link-light text-decoration-none opacity-50 x-font-size-18 opacity-100 external-link" rel="nofollow" data-href="https://ru.hexlet.io/locale/switch?new_locale=ru" role="button"><span class='my-auto'>RU</span>
+</span></li>
+<li class='me-3'>
+<span class="link-light text-decoration-none opacity-50 x-font-size-18 external-link" rel="nofollow" data-href="https://kz.hexlet.io/locale/switch?new_locale=kz" role="button"><span class='my-auto'>KZ</span>
+</span></li>
+</ul>
+</div>
+<div class='col-12 col-sm-4 col-md-3'>
+<ul class='list-unstyled fs-4'>
+<li class='mb-3'>
+<a class="link-light text-decoration-none" href="tel:8%20800%20100%2022%2047">8 800 100 22 47</a>
+<span class='d-block opacity-50 small'>бесплатно по РФ</span>
+</li>
+<li>
+<a class="link-light text-decoration-none" href="tel:%2B7%20495%20085%2021%2062">+7 495 085 21 62</a>
+<span class='d-block opacity-50 small'>бесплатно по Москве</span>
+</li>
+</ul>
+</div>
+<div class='col-12 col-sm-4 col-md-3'>
+<ul class='list-unstyled small'>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/pages/tos">Условия использования</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/pages/privacy">Политика обработки данных</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/pages/cookie_policy">Использования Cookie-файлов</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/pages/personal_data">Соглашение об обработке ПД</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/pages/offer_cpe">Оферта &quot;Учебный центр &quot;Хекслет&quot;</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/pages/promo">Акции</a>
+</li>
+<li>
+<a class="nav-link link-light py-1 ps-0" href="/pages/offer">Оферта</a>
+</li>
+</ul>
+</div>
+<div class='col-12 col-sm-12 col-md-4 small'>
+<div class='mb-2'>
+<div>ООО «<a href="/" class="text-decoration-none link-light">Хекслет Рус</a>»</div>
+<div>108813 г. Москва, вн.тер.г. поселение Московский,</div>
+<div>г. Московский, ул. Солнечная, д. 3А, стр. 1, помещ. 20Б/3</div>
+<div>ОГРН 1217300010476</div>
+<div>ИНН 7325174845</div>
+</div>
+<hr>
+<div>АНО ДПО «<a href="/" class="text-decoration-none link-light">Учебный центр «Хекслет</a>»</div>
+<div>119331 г. Москва, вн. тер. г. муниципальный округ</div>
+<div>Ломоносовский, пр-кт Вернадского, д. 29</div>
+<div>ОГРН 1247700712390</div>
+<div>ИНН 7736364948</div>
+</div>
+</div>
+</footer>
+
+
+<div id='root-assistant-offcanvas'></div>
+<script src="/vite/assets/assistant-2PVq8sFf.js" crossorigin="anonymous" type="module"></script><link rel="modulepreload" href="/vite/assets/configure-HDnloo5r.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/gon-I1cC_3CT.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/client-DFkkCP0c.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/ThemeProvider-7UBWHimJ.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/MarkdownBlock-aWZNiEHN.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/useTranslation-Dx6iLToC.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/index-BhJJ1bhc.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/useIsomorphicEffect-Cgn8HvSf.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/Col-kID58xL5.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/Button-C_Ko8DsR.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/FallbackBlock-HgDZ-UzI.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/index-BNh45wjZ.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/index-D0Aner74.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/routes-BLPmjOSm.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/debounce-B9jNGj6E.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/mantine-vrEbW_RG.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/useWindow-BNXiWxkY.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/AbstractModalHeader-D-S3rfBl.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/divWithClassName-C0jRuFl_.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/_commonjsHelpers-BUFWF0wC.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/shiki-D0Dk0tOm.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/preload-helper-CNrLjLx4.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/index-cCp1SN7S.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/index-CKT6VXDh.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/Typography-B9VEGSVq.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/index-CuogHBCT.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/index-CmOxrBey.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/Table-Dj8_Qev2.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/Image-DISKgGWu.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/exports-1JYFr2Si.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/Button-DGiMfTw8.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/error-B09haw5r.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/clsx-C-Yl8jxX.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/objectWithoutPropertiesLoose-Bm6mis4y.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/useEventCallback-BjEB9HNC.js" as="script" crossorigin="anonymous">
+<script src="/vite/assets/vk_id_auth-D3LH3rK3.js" crossorigin="anonymous" type="module"></script><link rel="modulepreload" href="/vite/assets/_commonjsHelpers-BUFWF0wC.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/___vite-browser-external_commonjs-proxy-DLpEKaYg.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/gon-I1cC_3CT.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/routes-BLPmjOSm.js" as="script" crossorigin="anonymous">
+<script src="/vite/assets/yandex_id_auth-qy8V7i6z.js" crossorigin="anonymous" type="module"></script><link rel="modulepreload" href="/vite/assets/js.cookie-pCBBsYX8.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/gon-I1cC_3CT.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/routes-BLPmjOSm.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="/vite/assets/isPlainObject-NNEjVPHJ.js" as="script" crossorigin="anonymous">
+
+
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"d11015b65d11429ea6b4a2ef37dd7e0b","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
+
