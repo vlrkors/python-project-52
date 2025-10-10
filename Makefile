@@ -1,31 +1,45 @@
-.PHONY: install start render-start migrate collectstatic makemigrations build lint format test
-
 install:
 	uv sync
 
-start:
-	python manage.py runserver 0.0.0.0:8000
-
-render-start:
-	gunicorn task_manager.wsgi
+dev-install:
+	uv sync --group dev
 
 migrate:
-	python manage.py migrate --noinput
-
-makemigrations:
-	python manage.py makemigrations
+	uv run python manage.py migrate
 
 collectstatic:
-	python manage.py collectstatic --noinput
+	uv run python manage.py collectstatic --noinput
+
+run:
+	uv run python manage.py runserver
+
+render-start:
+	uv run gunicorn task_manager.wsgi
 
 build:
 	./build.sh
 
 lint:
-	@echo "Add your linter here (flake8/ruff)"
+	uv run ruff check
 
-format:
-	@echo "Add your formatter here (black/isort)"
+lint-fix:
+	uv run ruff check --fix
 
 test:
-	@echo "No tests yet"
+	uv run pytest --ds=task_manager.settings --reuse-db
+
+coverage:
+	uv run coverage run --omit='*/migrations/*,*/settings.py,*/venv/*,*/.venv/*' -m pytest --ds=task_manager.settings
+	uv run coverage report --show-missing --skip-covered
+
+ci-install:
+	uv sync --group dev
+
+ci-migrate:
+	uv run python manage.py makemigrations --noinput && \
+	uv run python manage.py migrate --noinput
+
+ci-test:
+	uv run coverage run --omit='*/migrations/*,*/settings.py,*/venv/*,*/.venv/*' -m pytest --ds=task_manager.settings --reuse-db
+	uv run coverage xml
+	uv run coverage report --show-missing --skip-covered
