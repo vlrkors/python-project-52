@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% load django_bootstrap5 %}
+{% load i18n %}
+
+{% block content %}
+<section class="card bg-dark border-light shadow-sm">
+  <div class="card-body">
+    <h2 class="h3 mb-4 text-white">{% trans "Login" %}</h2>
+    <form method="post" class="text-white">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <div class="d-flex justify-content-end mt-4">
+        {% trans 'Log in' as login_text %}
+        {% bootstrap_button login_text button_type="submit" button_class="btn-light" %}
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

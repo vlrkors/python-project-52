@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+{% load i18n %}
+
+{% block content %}
+<section class="text-center text-white py-5">
+  <h1 class="display-4 fw-bold mb-3">{% trans "Welcome to Task Manager" %}</h1>
+  <p class="lead mb-4">
+    {% trans "Track tasks, manage statuses, and collaborate with your team in a modern interface." %}
+  </p>
+  <div class="d-flex flex-column flex-md-row gap-3 justify-content-center mb-4">
+    <a class="btn btn-light btn-lg px-4" href="{% url 'login' %}">
+      {% trans "Sign in" %}
+    </a>
+    <a class="btn btn-outline-light btn-lg px-4" href="{% url 'user_create' %}">
+      {% trans "Register" %}
+    </a>
+    <a class="btn btn-outline-light btn-lg px-4" href="{% url 'users_index' %}">
+      {% trans "Users" %}
+    </a>
+  </div>
+  <p class="text-white-50">
+    {% trans "Powered by Hexlet. Learn more about our courses:" %}
+    <a class="text-white fw-semibold" href="https://ru.hexlet.io" target="_blank" rel="noopener">
+      {% trans "Hexlet programming courses" %}
+    </a>
+  </p>
+</section>
+{% endblock %}

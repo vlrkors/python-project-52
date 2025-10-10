@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% load django_bootstrap5 %}
+{% load i18n %}
+
+{% block content %}
+<section class="card bg-dark border-light shadow-sm">
+  <div class="card-body">
+    <h1 class="h3 mb-4 text-white">{% trans "Delete label" %}</h1>
+    <p class="text-white-50">
+      {% blocktrans %}Are you sure you want to delete {{ label }}?{% endblocktrans %}
+    </p>
+    <form method="post" class="d-flex justify-content-end">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">{% trans "Yes, delete" %}</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

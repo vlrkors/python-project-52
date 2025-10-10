@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% load i18n django_bootstrap5 %}
+
+{% block content %}
+<section class="card bg-dark border-light shadow-sm">
+  <div class="card-body">
+    <h1 class="h3 mb-4 text-white">{% trans "Update task" %}</h1>
+
+    <form method="post" class="text-white">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <div class="d-flex justify-content-end mt-4">
+        <button type="submit" class="btn btn-light">{% trans "Update" %}</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
