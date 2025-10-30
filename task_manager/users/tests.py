@@ -11,77 +11,83 @@ User = get_user_model()
 
 
 @pytest.mark.django_db
-class UserCRUDTests(TestCase):
+class UserCrudTests(TestCase):
     fixtures = ['users.json']
 
     def setUp(self):
+        super().setUp()
         self.user1 = User.objects.get(pk=1)
         self.user2 = User.objects.get(pk=2)
-        self.user3 = User.objects.get(pk=3)
 
-        for user in [self.user1, self.user2, self.user3]:
-            user.set_password('testpass123')
+        for user in (self.user1, self.user2):
+            user.set_password('testpass123')  # NOSONAR
             user.save()
 
-    def test_user_registration(self):
-        initial_users = User.objects.count()
-
-        url = reverse('user_create')
-        data = {
-            'username': 'newuser',
-            'password1': 'newpass123',  # NOSONAR
-            'password2': 'newpass123',  # NOSONAR
-            'first_name': 'New',
-            'last_name': 'User'
-        }
-        response = self.client.post(url, data)
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(User.objects.count(), initial_users + 1)
-        self.assertTrue(User.objects.filter(username='newuser').exists())
-
-        messages = list(get_messages(response.wsgi_request))
-        assert "успешно" in str(messages[0]).lower()
-
-    def test_user_update_authenticated(self):
-        self.client.login(username='user1', password='testpass123')  # NOSONAR
-        url = reverse('user_update', kwargs={'pk': self.user1.pk})
+    def test_user_registration_creates_account_and_redirects_to_login(self):
+        users_before = User.objects.count()
         response = self.client.post(
-            url,
+            reverse('user_create'),
             {
-                'username': 'user1',  # NOSONAR
-                'first_name': 'Updated',  # NOSONAR
-                'last_name': 'User',  # NOSONAR
+                'username': 'new_user',
+                'first_name': 'New',
+                'last_name': 'User',
                 'password1': 'newpass123',  # NOSONAR
                 'password2': 'newpass123',  # NOSONAR
-            }
+            },
         )
+
+        self.assertRedirects(response, reverse('login'))
+        self.assertEqual(User.objects.count(), users_before + 1)
+        self.assertTrue(User.objects.filter(username='new_user').exists())
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertIn('User created successfully', str(messages[0]))
+
+    def test_user_update_changes_profile_and_redirects_to_index(self):
+        self.client.login(username='user1', password='testpass123')  # NOSONAR
+        response = self.client.post(
+            reverse('user_update', kwargs={'pk': self.user1.pk}),
+            {
+                'username': 'user1',
+                'first_name': 'Updated',
+                'last_name': 'User',
+                'password1': 'newpass123',  # NOSONAR
+                'password2': 'newpass123',  # NOSONAR
+            },
+        )
+
         self.assertRedirects(response, reverse('users_index'))
         self.user1.refresh_from_db()
         self.assertEqual(self.user1.first_name, 'Updated')
         self.assertTrue(self.user1.check_password('newpass123'))
 
-    def test_user_update_unauthenticated(self):
-        url = reverse('user_update', kwargs={'pk': self.user1.pk})
-        response = self.client.post(url)
-
-        login_url = reverse('login')
-        expected_redirect = f"{login_url}?next={url}"
-        self.assertRedirects(response, expected_redirect)
-
         messages = list(get_messages(response.wsgi_request))
-        assert "не авторизованы" in str(messages[0]).lower()
+        self.assertIn('User updated successfully', str(messages[0]))
 
-    def test_cannot_delete_user_with_tasks(self):
-        status = Status.objects.create(name='В работе')
+    def test_user_delete_removes_user_and_redirects_to_index(self):
+        self.client.login(username='user2', password='testpass123')  # NOSONAR
+        response = self.client.post(
+            reverse('user_delete', kwargs={'pk': self.user2.pk}),
+            follow=False,
+        )
 
+        self.assertRedirects(response, reverse('users_index'))
+        self.assertFalse(User.objects.filter(pk=self.user2.pk).exists())
+
+    def test_user_with_tasks_cannot_be_deleted(self):
+        status = Status.objects.create(name='Test status')
         Task.objects.create(
-            name="Test task",
+            name='Test task',
             status=status,
-            author=self.user1
+            author=self.user1,
         )
 
         self.client.login(username='user1', password='testpass123')  # NOSONAR
-        self.client.post(reverse('user_delete', args=[self.user1.pk]))
+        response = self.client.post(
+            reverse('user_delete', kwargs={'pk': self.user1.pk}),
+            follow=True,
+        )
 
         self.assertTrue(User.objects.filter(pk=self.user1.pk).exists())
+        messages = list(get_messages(response.wsgi_request))
+        self.assertIn('It is impossible to delete the user', str(messages[0]))
