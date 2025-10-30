@@ -3,16 +3,10 @@
 {% load i18n %}
 
 {% block content %}
-<section class="card bg-dark border-light shadow-sm">
-  <div class="card-body">
-    <h1 class="h3 mb-4 text-white">{% trans "Update user" %}</h1>
-    <form action="{% url 'user_update' user.pk %}" method="post" class="text-white">
-      {% csrf_token %}
-      {% bootstrap_form form %}
-      <div class="d-flex justify-content-end mt-4">
-        <input class="btn btn-light" type="submit" value="{% trans 'Update' %}">
-      </div>
-    </form>
-  </div>
-</section>
+<h1 class="my-4">{% trans "Update user" %}</h1>
+  <form action="{% url 'user_update' user.pk %}" method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input class="btn btn-primary" type="submit" value="{% trans 'Update' %}">
+  </form>
 {% endblock %}
