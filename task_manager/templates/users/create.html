@@ -3,16 +3,12 @@
 {% load i18n %}
 
 {% block content %}
-<section class="card bg-dark border-light shadow-sm">
-  <div class="card-body">
-    <h1 class="h3 mb-4 text-white">{% trans "Registration" %}</h1>
-    <form method="post" class="text-white">
-      {% csrf_token %}
-      {% bootstrap_form form %}
-      <div class="d-flex justify-content-end mt-4">
-        <input class="btn btn-light" type="submit" value="{% trans 'Register' %}">
-      </div>
-    </form>
-  </div>
-</section>
+<div class="container wrapper flex-grow-1">
+<h1 class="my-4">{% trans "Registration" %}</h1>
+<form method="post">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  <input class="btn btn-primary" type="submit" value="{% trans 'Register' %}">
+</form>
+</div>
 {% endblock %}
