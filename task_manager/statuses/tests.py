@@ -1,5 +1,6 @@
 import pytest
 from django.contrib.auth import get_user_model
+from django.contrib.messages import get_messages
 from django.urls import reverse
 
 from task_manager.tasks.models import Task
@@ -9,51 +10,86 @@ from .models import Status
 User = get_user_model()
 
 
+@pytest.fixture
+def user():
+    return User.objects.create_user(
+        username='user1',
+        password='testpass123',  # NOSONAR
+    )
+
+
+@pytest.fixture
+def auth_client(client, user):
+    client.login(username=user.username, password='testpass123')  # NOSONAR
+    return client
+
+
 @pytest.mark.django_db
-class TestStatusCRUD:
-    @pytest.fixture
-    def logged_client(self, client):
-        User.objects.create_user(username='user1',
-                                 password='testpass123')  # NOSONAR
-        client.login(username='user1', password='testpass123')  # NOSONAR
-        return client
+def test_create_status(auth_client):
+    response = auth_client.post(
+        reverse('status_create'),
+        {'name': 'new'},
+    )
 
-    def test_create_status(self, logged_client):
-        url = reverse('status_create')
-        response = logged_client.post(url, {'name': 'Новый'})
-        assert response.status_code == 302
-        assert Status.objects.filter(name='Новый').exists()
+    assert response.status_code == 302
+    assert response.url == reverse('statuses_index')
+    assert Status.objects.filter(name='new').exists()
 
-    def test_update_status(self, logged_client):
-        status = Status.objects.create(name='Старый')
-        url = reverse('status_update', args=[status.pk])
-        logged_client.post(url, {'name': 'Обновленный'})
-        status.refresh_from_db()
-        assert status.name == 'Обновленный'
+    messages = list(get_messages(response.wsgi_request))
+    assert any('Status successfully created' in str(message) for message in messages)
 
-    def test_delete_status(self, logged_client):
-        status = Status.objects.create(name='Удалить')
-        url = reverse('status_delete', args=[status.pk])
-        logged_client.post(url)
-        assert not Status.objects.filter(pk=status.pk).exists()
 
-    def test_status_list_requires_login(self, client):
-        url = reverse('statuses_index')
-        response = client.get(url)
-        assert response.status_code == 302
+@pytest.mark.django_db
+def test_update_status(auth_client):
+    status = Status.objects.create(name='in_progress')
 
-    def test_cannot_delete_status_in_use(self, logged_client):
-        status = Status.objects.create(name='В работе')
-        author = User.objects.get(username='user1')
-        Task.objects.create(
-            name='Test task',
-            status=status,
-            author=author
-        )
+    response = auth_client.post(
+        reverse('status_update', args=[status.pk]),
+        {'name': 'testing'},
+    )
 
-        url = reverse('status_delete', args=[status.pk])
-        response = logged_client.post(url)
+    assert response.status_code == 302
+    assert response.url == reverse('statuses_index')
 
-        assert response.status_code == 302
+    status.refresh_from_db()
+    assert status.name == 'testing'
 
-        assert Status.objects.filter(pk=status.pk).exists()
+    messages = list(get_messages(response.wsgi_request))
+    assert any('Status successfully changed' in str(message) for message in messages)
+
+
+@pytest.mark.django_db
+def test_delete_status(auth_client):
+    status = Status.objects.create(name='done')
+
+    response = auth_client.post(reverse('status_delete', args=[status.pk]))
+
+    assert response.status_code == 302
+    assert response.url == reverse('statuses_index')
+    assert not Status.objects.filter(pk=status.pk).exists()
+
+
+@pytest.mark.django_db
+def test_status_list_requires_login(client):
+    url = reverse('statuses_index')
+    response = client.get(url)
+    login_url = reverse('login')
+    assert response.status_code == 302
+    assert response.url == f'{login_url}?next={url}'
+
+
+@pytest.mark.django_db
+def test_cannot_delete_status_in_use(auth_client, user):
+    status = Status.objects.create(name='in_progress')
+    Task.objects.create(
+        name='Test task',
+        status=status,
+        author=user,
+    )
+
+    response = auth_client.post(reverse('status_delete', args=[status.pk]), follow=True)
+
+    assert Status.objects.filter(pk=status.pk).exists()
+
+    messages = list(get_messages(response.wsgi_request))
+    assert any('It is impossible to delete the status' in str(message) for message in messages)
