@@ -79,5 +79,5 @@ class TaskDeleteView(LoginRequiredMixin, SuccessMessageMixin,
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
             return super().handle_no_permission()
-        messages.error(self.request, _("Only the author can delete an issue."))
+        messages.error(self.request, "только ее автор")
         return redirect(self.success_url)

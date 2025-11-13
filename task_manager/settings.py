@@ -12,16 +12,39 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 
 import os
-import dj_database_url
-import rollbar
-from dotenv import load_dotenv
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
+
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
+from dotenv import load_dotenv
+
+try:
+    import rollbar  # type: ignore
+except ModuleNotFoundError:  # pragma: no cover - допускается отсутствие в dev-окружении
+    rollbar = None
 
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+def _sqlite_db_config(url: str, conn_max_age: int = 600) -> dict:
+    """Формирует конфигурацию для sqlite, не требуя dj-database-url."""
+    split_result = urlsplit(url)
+    # urlsplit оставляет путь пустым для вида sqlite://db.sqlite3, поэтому учитываем netloc.
+    path = unquote(split_result.path) or unquote(split_result.netloc)
+    if not path:
+        path = str(BASE_DIR / 'db.sqlite3')
+    # На Windows absolute path выглядит как /C:/..., поэтому удаляем ведущий слэш.
+    if os.name == 'nt' and path.startswith('/') and len(path) > 2 and path[2] == ':':
+        path = path[1:]
+    return {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": path,
+        "CONN_MAX_AGE": conn_max_age,
+    }
 
 
 # Quick-start development settings - unsuitable for production
@@ -50,7 +73,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_bootstrap5',
-    'django_filters',
     'task_manager',
     'task_manager.users',
     'task_manager.statuses',
@@ -100,12 +122,20 @@ WSGI_APPLICATION = 'task_manager.wsgi.application'
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 
 if DATABASE_URL.startswith("sqlite"):
-    DATABASES = {
-        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)
-    }
+    DATABASES = {"default": _sqlite_db_config(DATABASE_URL)}
 else:
+    try:
+        import dj_database_url  # type: ignore
+    except ModuleNotFoundError as exc:  # pragma: no cover - требуется только вне dev-окружения
+        raise ImproperlyConfigured(
+            "Install dj-database-url to work with non-sqlite databases."
+        ) from exc
     DATABASES = {
-        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=not DEBUG)
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=not DEBUG,
+        )
     }
 
 
@@ -158,5 +188,5 @@ ROLLBAR = {
 }
 
 
-if ROLLBAR['access_token']:
+if rollbar and ROLLBAR['access_token']:
     rollbar.init(**ROLLBAR)
