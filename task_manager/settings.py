@@ -58,7 +58,7 @@ DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
 
 allowed_hosts = os.getenv(
     "ALLOWED_HOSTS",
-    "localhost,127.0.0.1,webserver,python-project-52-tae0.onrender.com",
+    "localhost,127.0.0.1,webserver,.onrender.com",
 )
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(",") if host.strip()]
 
