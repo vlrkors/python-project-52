@@ -14,6 +14,7 @@ run:
 	uv run python manage.py runserver
 
 render-start:
+	uv run python manage.py migrate --noinput
 	uv run gunicorn task_manager.wsgi
 
 build:
