@@ -167,6 +167,7 @@ TIME_ZONE = 'UTC'
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+os.makedirs(STATIC_ROOT, exist_ok=True)
 
 STORAGES = {
     "default": {
@@ -186,8 +187,12 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+_rollbar_token = os.getenv('ROLLBAR_ACCESS_TOKEN', '').strip()
+if _rollbar_token.lower() == 'roolbar_token':
+    _rollbar_token = ''
+
 ROLLBAR = {
-    'access_token': os.getenv('ROLLBAR_ACCESS_TOKEN', 'ROOLBAR_TOKEN'),
+    'access_token': _rollbar_token,
     'environment': os.getenv('ROLLBAR_ENV', 'development'),
     'code_version': '1.0',
     'root': BASE_DIR,
