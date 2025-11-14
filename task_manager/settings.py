@@ -53,11 +53,19 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-hexlet-task-manager")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
 
-allowed_hosts = os.getenv(
-    "ALLOWED_HOSTS",
-    "localhost,127.0.0.1,webserver,.onrender.com",
-)
-ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(",") if host.strip()]
+_default_allowed_hosts = {
+    "localhost",
+    "127.0.0.1",
+    "webserver",
+    ".onrender.com",
+}
+allowed_hosts_env = os.getenv("ALLOWED_HOSTS", "").strip()
+allowed_hosts = {
+    host.strip()
+    for host in allowed_hosts_env.split(",")
+    if host.strip()
+}
+ALLOWED_HOSTS = sorted(_default_allowed_hosts | allowed_hosts)
 
 
 # Application definition
