@@ -36,7 +36,10 @@ def test_create_status(auth_client):
     assert Status.objects.filter(name='new').exists()
 
     messages = list(get_messages(response.wsgi_request))
-    assert any('Status successfully created' in str(message) for message in messages)
+    assert any(
+        'Status successfully created' in str(message)
+        for message in messages
+    )
 
 
 @pytest.mark.django_db
@@ -55,7 +58,10 @@ def test_update_status(auth_client):
     assert status.name == 'testing'
 
     messages = list(get_messages(response.wsgi_request))
-    assert any('Status successfully changed' in str(message) for message in messages)
+    assert any(
+        'Status successfully changed' in str(message)
+        for message in messages
+    )
 
 
 @pytest.mark.django_db
@@ -87,9 +93,15 @@ def test_cannot_delete_status_in_use(auth_client, user):
         author=user,
     )
 
-    response = auth_client.post(reverse('status_delete', args=[status.pk]), follow=True)
+    response = auth_client.post(
+        reverse('status_delete', args=[status.pk]),
+        follow=True,
+    )
 
     assert Status.objects.filter(pk=status.pk).exists()
 
     messages = list(get_messages(response.wsgi_request))
-    assert any('It is impossible to delete the status' in str(message) for message in messages)
+    assert any(
+        'It is impossible to delete the status' in str(message)
+        for message in messages
+    )

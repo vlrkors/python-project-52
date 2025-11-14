@@ -1,6 +1,7 @@
 try:
     from rollbar.contrib.django.middleware import RollbarNotifierMiddleware
-except ModuleNotFoundError:  # pragma: no cover - rollbar опционален в dev-среде
+except Exception:  # pragma: no cover
+    # rollbar и его зависимости могут отсутствовать в окружении.
     from django.utils.deprecation import MiddlewareMixin
 
     class RollbarNotifierMiddleware(MiddlewareMixin):
@@ -9,8 +10,9 @@ except ModuleNotFoundError:  # pragma: no cover - rollbar опционален �
         def __init__(self, get_response=None):
             super().__init__(get_response)
 
-        def process_exception(self, request, exception):  # noqa: D401 - описывать нечего
-            # Нам некуда отправлять ошибки без rollbar, просто продолжаем цепочку.
+        def process_exception(self, request, exception):  # noqa: D401
+            # Нам некуда отправлять ошибки без rollbar.
+            # Просто продолжаем цепочку.
             return None
 
 

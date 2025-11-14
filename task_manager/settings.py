@@ -19,12 +19,9 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
-try:
-    import rollbar  # type: ignore
-except ModuleNotFoundError:  # pragma: no cover - допускается отсутствие в dev-окружении
-    rollbar = None
-
 load_dotenv()
+
+rollbar = None
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -190,6 +187,12 @@ LOGOUT_REDIRECT_URL = '/'
 _rollbar_token = os.getenv('ROLLBAR_ACCESS_TOKEN', '').strip()
 if _rollbar_token.lower() == 'roolbar_token':
     _rollbar_token = ''
+if _rollbar_token:
+    try:
+        import rollbar as _rollbar_module  # type: ignore
+    except Exception:
+        _rollbar_module = None
+    rollbar = _rollbar_module
 
 ROLLBAR = {
     'access_token': _rollbar_token,

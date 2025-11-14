@@ -10,5 +10,4 @@ class CompressedManifestStaticFilesStorage(ManifestStaticFilesStorage):
         try:
             return super().stored_name(name, *args, **kwargs)
         except Exception:
-            # Не пытаемся искать отпечаток файла — просто возвращаем исходный путь.
             return name

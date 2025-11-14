@@ -32,7 +32,9 @@ class TaskFilter:
     """Простая подмена django-filter, достаточная для тестов проекта."""
 
     def __init__(self, data=None, queryset=None):
-        self.queryset = queryset if queryset is not None else Task.objects.none()
+        self.queryset = (
+            queryset if queryset is not None else Task.objects.none()
+        )
         self.form = TaskFilterForm(data or None)
         self._qs = self._apply_filters()
 

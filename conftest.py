@@ -16,7 +16,12 @@ django.setup()
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _django_test_environment():
+def _django_test_environment(pytestconfig):
+    if pytestconfig.pluginmanager.hasplugin("django"):
+        # pytest-django сам управляет окружением/БД.
+        yield
+        return
+
     setup_test_environment()
     db_cfg = setup_databases(verbosity=0, interactive=False)
     try:
@@ -31,7 +36,12 @@ class _PytestTransactionTestCase(TransactionTestCase):
 
 
 @pytest.fixture(autouse=True)
-def django_db(request, _django_test_environment):
+def django_db(request, pytestconfig, _django_test_environment):
+    if pytestconfig.pluginmanager.hasplugin("django"):
+        # Полностью полагаемся на фикстуры pytest-django.
+        yield
+        return
+
     test_class = getattr(request.node, "cls", None)
     if test_class and issubclass(test_class, TestCase):
         yield
