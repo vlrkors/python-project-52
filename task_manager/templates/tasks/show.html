@@ -2,52 +2,60 @@
 {% load i18n %}
 
 {% block content %}
-<section class="card text-bg-dark border-light shadow-sm">
-  <div class="card-header border-light">
-    <h1 class="h3 mb-0 text-white">{% trans "Task detail" %}</h1>
-  </div>
-  <div class="card-body">
-    <h2 class="h4 text-white mb-3">{{ task.name }}</h2>
-    {% if task.description %}
-      <p class="text-white-50">{{ task.description }}</p>
-      <hr class="border-light">
-    {% endif %}
-
-    <dl class="row gy-3">
-      <dt class="col-sm-3 text-white-50">{% trans "Author" %}</dt>
-      <dd class="col-sm-9">{{ task.author.get_full_name|default:task.author.username }}</dd>
-
-      <dt class="col-sm-3 text-white-50">{% trans "Executor" %}</dt>
-      <dd class="col-sm-9">
-        {% if task.executor %}
-          {{ task.executor.get_full_name|default:task.executor.username }}
-        {% else %}
-          {% trans "Not assigned" %}
-        {% endif %}
-      </dd>
-
-      <dt class="col-sm-3 text-white-50">{% trans "Status" %}</dt>
-      <dd class="col-sm-9">{{ task.status.name }}</dd>
-
-      <dt class="col-sm-3 text-white-50">{% trans "Creation date" %}</dt>
-      <dd class="col-sm-9">{{ task.created_at|date:"d.m.Y H:i" }}</dd>
-    </dl>
-
-    {% if task.labels.all %}
-      <div class="mb-4">
-        <h3 class="h6 text-white-50 text-uppercase">{% trans "Labels" %}</h3>
-        <div class="d-flex flex-wrap gap-2">
-          {% for label in task.labels.all %}
-            <span class="badge text-bg-secondary">{{ label.name }}</span>
-          {% endfor %}
+<div class="container wrapper flex-grow-1">
+    <h1 class="my-4">{% trans "Task detail" %}</h1>
+    
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h2>{{ task.name }}</h2>
         </div>
-      </div>
-    {% endif %}
-
-    <div class="d-flex justify-content-end gap-3">
-      <a class="btn btn-outline-light" href="{% url 'task_update' task.id %}">{% trans "Edit" %}</a>
-      <a class="btn btn-danger" href="{% url 'task_delete' task.id %}">{% trans "Delete" %}</a>
+        <div class="card-body bg-light">
+            <p>{{ task.description }}</p>
+            <hr>
+            <div class="container">
+                <div class="row p-1">
+                    <div class="col">{% trans "Author" %}</div>
+                    <div class="col">{{ task.author.get_full_name|default:task.author.username }}</div>
+                </div>
+                <div class="row p-1">
+                    <div class="col">{% trans "Executor" %}</div>
+                    <div class="col">
+                        {% if task.executor %}
+                            {{ task.executor.get_full_name|default:task.executor.username }}
+                        {% else %}
+                            None
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row p-1">
+                    <div class="col">{% trans "Status" %}</div>
+                    <div class="col">{{ task.status.name }}</div>
+                </div>
+                <div class="row p-1">
+                    <div class="col">{% trans "Creation date" %}</div>
+                    <div class="col">{{ task.created_at|date:"d.m.Y H:i" }}</div>
+                </div>
+                <div class="row p-1">
+                    <div class="col">
+                        <h6>{% trans "Labels" %}:</h6>
+                        <ul>
+                        {% if task.labels.all %}
+                            {% for label in task.labels.all %}
+                            <li>{{ label.name }}</li>
+                            {% endfor %}
+                        {% endif %}
+                         </ul>
+                    </div>
+                        
+                <div class="row p-1">
+                    <div class="col">
+                        <a href="{% url 'task_update' task.id %}">{% trans "Edit" %}</a>
+                        <br>
+                        <a href="{% url 'task_delete' task.id %}">{% trans "Delete" %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</section>
+</div>
 {% endblock %}
