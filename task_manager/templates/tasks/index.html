@@ -2,87 +2,76 @@
 {% load i18n django_bootstrap5 %}
 
 {% block content %}
-<section class="card bg-dark border-light shadow-sm">
-  <div class="card-body">
-    <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between mb-4 gap-3">
-      <h1 class="h2 mb-0 text-white">{% trans "Tasks" %}</h1>
-      <a href="{% url 'task_create' %}" class="btn btn-light">
+<div class="container">
+    <h1 class="my-4">{% trans "Tasks" %}</h1>
+    
+    <a href="{% url 'task_create' %}" class="btn btn-primary mb-3">
         {% trans "Create task" %}
-      </a>
-    </div>
+    </a>
 
-    <form method="get" class="mb-4 text-white">
-      <div class="row g-3">
-        <div class="col-12 col-md-4">
-          {% bootstrap_field filter.form.status show_label=True %}
-        </div>
-        <div class="col-12 col-md-4">
-          {% bootstrap_field filter.form.executor show_label=True %}
-        </div>
-        <div class="col-12 col-md-4">
-          {% bootstrap_field filter.form.labels show_label=True %}
-        </div>
-      </div>
+    <form method="get" class="mb-4">
+        {% bootstrap_field filter.form.status show_label=True %}
+        {% bootstrap_field filter.form.executor show_label=True %}
+        {% bootstrap_field filter.form.labels show_label=True %}
 
-      <div class="form-check form-switch my-3">
-        <input type="checkbox"
-               name="self_tasks"
-               id="id_self_tasks"
-               class="form-check-input"
-               {% if request.GET.self_tasks %}checked{% endif %}>
-        <label class="form-check-label" for="id_self_tasks">
-          {% trans "Only your own tasks" %}
-        </label>
-      </div>
+        <div class="form-group mb-3">
+            <div class="form-check">
+                <input type="checkbox"
+                        name="self_tasks"
+                        id="id_self_tasks"
+                        class="form-check-input"
+                        {% if request.GET.self_tasks %}checked{% endif %}>
+                <label class="form-check-label" for="id_self_tasks">
+                        {% trans "Only your own tasks" %}
+                </label>
+            </div>
+        </div>
 
-      <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-outline-light">{% trans "Show" %}</button>
-      </div>
+        <button type="submit" class="btn btn-primary">{% trans "Show" %}</button>
     </form>
 
-    <div class="table-responsive">
-      <table class="table table-dark table-striped table-hover align-middle mb-0">
+
+    <table class="table table-striped" style="table-layout: fixed;">
         <thead>
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">{% trans "Name" %}</th>
-            <th scope="col">{% trans "Status" %}</th>
-            <th scope="col">{% trans "Author" %}</th>
-            <th scope="col">{% trans "Executor" %}</th>
-            <th scope="col">{% trans "Creation date" %}</th>
-            <th scope="col" class="text-end">{% trans "Actions" %}</th>
-          </tr>
+            <tr>
+                <th class="col-1">ID</th>
+                <th class="col-2">{% trans "Name" %}</th>
+                <th class="col-2">{% trans "Status" %}</th>
+                <th class="col-2">{% trans "Author" %}</th>
+                <th class="col-2">{% trans "Executor" %}</th>
+                <th class="col-2">{% trans "Creation date" %}</th>
+                <th class="col-1"></th>
+            </tr>
         </thead>
         <tbody>
-          {% for task in tasks %}
-          <tr>
-            <td>{{ task.id }}</td>
-            <td><a class="link-light" href="{% url 'task_show' task.id %}">{{ task.name }}</a></td>
-            <td>{{ task.status.name }}</td>
-            <td>{{ task.author.get_full_name }}</td>
-            <td>
-              {% if task.executor %}
-                {{ task.executor.get_full_name }}
-              {% endif %}
-            </td>
-            <td>{{ task.created_at|date:"d.m.Y H:i" }}</td>
-            <td class="text-end">
-              <a class="link-light me-3" href="{% url 'task_update' task.id %}">
-                {% trans "Update" %}
-              </a>
-              <a class="link-danger" href="{% url 'task_delete' task.id %}">
-                {% trans "Delete" %}
-              </a>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="7" class="text-center text-white-50">{% trans "No tasks" %}</td>
-          </tr>
-          {% endfor %}
+            {% for task in tasks %}
+            <tr>
+                <td class="col-1">{{ task.id }}</td>
+                <td class="col-2"><a href="{% url 'task_show' task.id %}">{{ task.name }}</a></td>
+                <td class="col-2">{{ task.status.name }}</td>
+                <td class="col-2">{{ task.author.get_full_name }}</td>
+                <td class="col-2">
+                    {% if task.executor %}
+                        {{ task.executor.get_full_name }}
+                    {% endif %}
+                </td>
+                <td class="col-2">{{ task.created_at|date:"d.m.Y H:i" }}</td>
+                <td class="col-1">
+                    <a href="{% url 'task_update' task.id %}">
+                        {% trans "Update" %}
+                    </a>
+                    <br>
+                    <a href="{% url 'task_delete' task.id %}">
+                        {% trans "Delete" %}
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8">{% trans "No tasks" %}</td>
+            </tr>
+            {% endfor %}
         </tbody>
-      </table>
-    </div>
-  </div>
-</section>
+    </table>
+</div>
 {% endblock %}
