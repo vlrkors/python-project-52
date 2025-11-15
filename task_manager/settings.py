@@ -68,6 +68,43 @@ allowed_hosts = {
 ALLOWED_HOSTS = sorted(_default_allowed_hosts | allowed_hosts)
 
 
+def _host_to_csrf_origins(host: str) -> set[str]:
+    host = host.strip()
+    if not host:
+        return set()
+    if host.startswith("."):
+        trimmed = host[1:]
+        if not trimmed:
+            return set()
+        target = f"*.{trimmed}"
+    else:
+        target = host
+    return {
+        f"http://{target}",
+        f"https://{target}",
+    }
+
+
+_default_csrf_trusted_origins = {
+    "http://localhost",
+    "https://localhost",
+    "http://127.0.0.1",
+    "https://127.0.0.1",
+}
+_csrf_env = os.getenv("CSRF_TRUSTED_ORIGINS", "").strip()
+_csrf_extra_origins = {
+    origin.strip()
+    for origin in _csrf_env.split(",")
+    if origin.strip()
+}
+_csrf_from_hosts = set()
+for host in ALLOWED_HOSTS:
+    _csrf_from_hosts.update(_host_to_csrf_origins(host))
+CSRF_TRUSTED_ORIGINS = sorted(
+    _default_csrf_trusted_origins | _csrf_extra_origins | _csrf_from_hosts
+)
+
+
 # Application definition
 
 INSTALLED_APPS = [
