@@ -28,8 +28,8 @@
           <nav class="collapse d-md-flex flex-md-row align-items-center gap-2" id="navbarContent">
             <a class="btn btn-outline-light" href="{% url 'users_index' %}">{% trans "Users" %}</a>
             {% if user.is_authenticated %}
-              <a class="btn btn-outline-light" href="{% url 'statuses_index' %}">{% trans "Statuses" %}</a>
               <a class="btn btn-outline-light" href="{% url 'labels_index' %}">{% trans "Labels" %}</a>
+              <a class="btn btn-outline-light" href="{% url 'statuses_index' %}">{% trans "Statuses" %}</a>
               <a class="btn btn-outline-light" href="{% url 'tasks_index' %}">{% trans "Tasks" %}</a>
               <form action="{% url 'logout' %}" method="post" class="d-inline">
                 {% csrf_token %}
