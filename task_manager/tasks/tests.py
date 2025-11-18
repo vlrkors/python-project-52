@@ -90,3 +90,54 @@ class TestTaskCRUD:
         assert Task.objects.count() == 1
         messages = list(get_messages(response.wsgi_request))
         assert "Only the author can delete an issue." in str(messages[0])
+
+    def test_filter_tasks_by_status_executor_label(self, client):
+        status_done = Status.objects.create(name='done')
+        task_with_label = Task.objects.create(
+            name='Bugfix',
+            status=self.status,
+            author=self.user1,
+            executor=self.user2,
+        )
+        task_with_label.labels.add(self.label_bug)
+
+        other_task = Task.objects.create(
+            name='Feature',
+            status=status_done,
+            author=self.user1,
+            executor=self.user2,
+        )
+        other_task.labels.add(self.label_feature)
+
+        client.login(username='user1', password='pass123')  # NOSONAR
+        url = reverse('tasks_index')
+        response = client.get(url, {
+            'status': self.status.id,
+            'executor': self.user2.id,
+            'labels': self.label_bug.id,
+            'self_tasks': 'on',
+        })
+
+        assert response.status_code == 200
+        tasks = list(response.context_data['tasks'])
+        assert tasks == [task_with_label]
+
+    def test_filter_tasks_only_user_tasks(self, client):
+        own_task = Task.objects.create(
+            name='Own Task',
+            status=self.status,
+            author=self.user1,
+        )
+        Task.objects.create(
+            name='Someone Task',
+            status=self.status,
+            author=self.user2,
+        )
+
+        client.login(username='user1', password='pass123')  # NOSONAR
+        url = reverse('tasks_index')
+        response = client.get(url, {'self_tasks': 'on'})
+
+        assert response.status_code == 200
+        tasks = list(response.context_data['tasks'])
+        assert tasks == [own_task]
