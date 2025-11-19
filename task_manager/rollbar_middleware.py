@@ -1,7 +1,6 @@
 try:
     from rollbar.contrib.django.middleware import RollbarNotifierMiddleware
 except Exception:  # pragma: no cover
-    # rollbar и его зависимости могут отсутствовать в окружении.
     from django.utils.deprecation import MiddlewareMixin
 
     class RollbarNotifierMiddleware(MiddlewareMixin):
