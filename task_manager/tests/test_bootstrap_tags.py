@@ -26,7 +26,9 @@ def message_request():
 
 def test_bootstrap_messages_renders_alert(message_request):
     messages.add_message(message_request, messages.INFO, "Hello!")
-    rendered = django_bootstrap5.bootstrap_messages({'request': message_request})
+    rendered = django_bootstrap5.bootstrap_messages(
+        {'request': message_request},
+    )
     assert 'alert-info' in rendered
     assert 'Hello!' in rendered
 
@@ -43,5 +45,8 @@ def test_bootstrap_field_renders_label_help_and_errors():
 
 
 def test_bootstrap_button_adds_default_class():
-    rendered = django_bootstrap5.bootstrap_button('Save', button_class='primary')
+    rendered = django_bootstrap5.bootstrap_button(
+        'Save',
+        button_class='primary',
+    )
     assert 'btn primary' in rendered
