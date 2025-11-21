@@ -24,6 +24,7 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+IS_TESTING = os.getenv("PYTEST_CURRENT_TEST") is not None
 
 
 def _to_bool(value: str, default: bool = False) -> bool:
@@ -164,7 +165,13 @@ WSGI_APPLICATION = 'task_manager.wsgi.application'
 # Database
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 
-if DATABASE_URL.startswith("sqlite"):
+if IS_TESTING:
+    test_db_url = os.getenv(
+        "TEST_DATABASE_URL",
+        f"sqlite:///{BASE_DIR / 'test_db.sqlite3'}",
+    )
+    DATABASES = {"default": _sqlite_db_config(test_db_url)}
+elif DATABASE_URL.startswith("sqlite"):
     DATABASES = {"default": _sqlite_db_config(DATABASE_URL)}
 else:
     try:
