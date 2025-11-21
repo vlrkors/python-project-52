@@ -1,28 +1,28 @@
-### Hexlet tests and linter status:
+### Статус тестов и линтера
 [![Actions Status](https://github.com/vlrkors/python-project-52/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/vlrkors/python-project-52/actions)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=vlrkors_python-project-52&metric=coverage)](https://sonarcloud.io/summary/new_code?id=vlrkors_python-project-52)
 
-# Task Manager
+# Менеджер задач
 
-A Django-based task management system that allows users to create, track, and manage tasks with statuses and labels.
+Django-приложение для создания, отслеживания и управления задачами со статусами и метками.
 
-## Features
+## Возможности
 
-- User authentication and authorization
-- Task management (create, read, update, delete)
-- Status management for tasks
-- Label management for task categorization
-- Internationalization support (i18n)
-- Responsive design with Bootstrap 5
+- Аутентификация и авторизация пользователей
+- CRUD для задач
+- Управление статусами задач
+- Метки для категоризации
+- Интернационализация (i18n)
+- Адаптивный интерфейс на Bootstrap 5
 
-## Tech Stack
+## Технологии
 
 - Python 3.11+
 - Django 5.2
 - PostgreSQL
 - Bootstrap 5
 
-## Setup and Installation
+## Установка
 
 ```bash
 make install
@@ -30,7 +30,12 @@ make migrate
 make run
 ```
 
-## Development
+## Использование
 
-- Run tests: `make test`
-- Check code style: `make lint`
+- Локально: выполните команды из раздела «Установка», затем откройте http://127.0.0.1:8000
+- Онлайн: https://python-project-52-z358.onrender.com
+
+## Разработка
+
+- Тесты: `make test`
+- Линтинг: `make lint`
