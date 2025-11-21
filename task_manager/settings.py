@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 
 import os
+import rollbar
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
@@ -20,8 +21,6 @@ from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
 load_dotenv()
-
-rollbar = None
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -156,8 +155,6 @@ WSGI_APPLICATION = 'task_manager.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 
 if DATABASE_URL.startswith("sqlite"):
@@ -179,14 +176,10 @@ else:
 
 
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = []
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 USE_I18N = True
 USE_TZ = True
 
@@ -202,8 +195,6 @@ TIME_ZONE = 'UTC'
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 os.makedirs(STATIC_ROOT, exist_ok=True)
@@ -218,32 +209,19 @@ STORAGES = {
 }
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-_rollbar_token = os.getenv('ROLLBAR_ACCESS_TOKEN', '').strip()
-if _rollbar_token.lower() == 'roolbar_token':
-    _rollbar_token = ''
-if _rollbar_token:
-    try:
-        import rollbar as _rollbar_module  # type: ignore
-    except Exception:
-        _rollbar_module = None
-    rollbar = _rollbar_module
-
 ROLLBAR = {
-    'access_token': _rollbar_token,
+    'access_token': os.getenv('ROLLBAR_ACCESS_TOKEN', 'ROLLBAR_TOKEN'),
     'environment': os.getenv('ROLLBAR_ENV', 'development'),
     'code_version': '1.0',
     'root': BASE_DIR,
 }
 
 
-if rollbar and ROLLBAR['access_token'] and not getattr(rollbar, "_hexlet_initialized", False):
+if ROLLBAR['access_token']:
     rollbar.init(**ROLLBAR)
-    rollbar._hexlet_initialized = True
