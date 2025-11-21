@@ -26,6 +26,12 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+def _to_bool(value: str, default: bool = False) -> bool:
+    if value is None:
+        return default
+    return value.lower() in ("true", "1", "yes")
+
+
 def _sqlite_db_config(url: str, conn_max_age: int = 600) -> dict:
     """Формирует конфигурацию для sqlite, не требуя dj-database-url."""
     split_result = urlsplit(url)
@@ -44,10 +50,11 @@ def _sqlite_db_config(url: str, conn_max_age: int = 600) -> dict:
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY", "")
+_secret_key = os.getenv("SECRET_KEY") or os.getenv("DJANGO_SECRET_KEY")
+SECRET_KEY = _secret_key or "dev-secret-key"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
+DEBUG = _to_bool(os.getenv("DEBUG") or os.getenv("DJANGO_DEBUG"), default=False)
 
 _default_allowed_hosts = {
     "localhost",
