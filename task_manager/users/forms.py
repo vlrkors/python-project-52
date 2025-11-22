@@ -11,33 +11,33 @@ class UserCreateForm(UserCreationForm):
         required=True,
         label=_("Password"),
         widget=forms.PasswordInput,
-        help_text=_("Your password must contain at least 3 characters.")
+        help_text=_("Your password must contain at least 3 characters."),
     )
     password2 = forms.CharField(
         required=True,
         label=_("Confirm Password"),
         widget=forms.PasswordInput,
-        help_text=_("Enter the same password again for verification.")
+        help_text=_("Enter the same password again for verification."),
     )
-    
+
     class Meta:
         model = User
         fields = [
-            'first_name',
-            'last_name',
-            'username',
-            'password1',
-            'password2'
+            "first_name",
+            "last_name",
+            "username",
+            "password1",
+            "password2",
         ]
         labels = {
-            'first_name': _('First name'),
-            'last_name': _('Last name'),
-            'username': _('Username'),
+            "first_name": _("First name"),
+            "last_name": _("Last name"),
+            "username": _("Username"),
         }
         widgets = {
-            'first_name': forms.TextInput(attrs={'required': True}),
-            'last_name': forms.TextInput(attrs={'required': True}),
-            'username': forms.TextInput(attrs={'required': True}),
+            "first_name": forms.TextInput(attrs={"required": True}),
+            "last_name": forms.TextInput(attrs={"required": True}),
+            "username": forms.TextInput(attrs={"required": True}),
         }
 
     def clean(self):
@@ -52,8 +52,10 @@ class UserCreateForm(UserCreationForm):
             if len(password1) < 3:
                 self.add_error(
                     "password2",
-                    _("The entered password is too short. \
-                        It must contain at least 3 characters."),
+                    _(
+                        "The entered password is too short. \
+                        It must contain at least 3 characters."
+                    ),
                 )
         return cleaned_data
 
@@ -73,15 +75,18 @@ class UserRegistrationForm(UserCreateForm):
 
 class UserUpdateForm(UserCreateForm):
     def clean_username(self):
-        username = self.cleaned_data.get('username')
+        username = self.cleaned_data.get("username")
 
         if username == self.instance.username:
             return username
 
-        if User.objects.filter(username=username).exclude(
-            pk=self.instance.pk).exists():
+        if (
+            User.objects.filter(username=username)
+            .exclude(pk=self.instance.pk)
+            .exists()
+        ):
             raise forms.ValidationError(
-                User._meta.get_field('username').error_messages['unique']
+                User._meta.get_field("username").error_messages["unique"]
             )
 
         return username
@@ -89,10 +94,20 @@ class UserUpdateForm(UserCreateForm):
 
 class UserLoginForm(AuthenticationForm):
     username = forms.CharField(
-        label=_('Username'),
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        label=_("Username"),
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": _("Username"),
+            }
+        ),
     )
     password = forms.CharField(
         label=_("Password"),
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": _("Password"),
+            }
+        ),
     )
