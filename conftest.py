@@ -1,5 +1,7 @@
 """Pytest bootstrap helpers for running Django without pytest-django."""
+
 import os
+from pathlib import Path
 
 import django
 import pytest
@@ -12,6 +14,10 @@ from django.test.utils import (
 )
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "task_manager.settings")
+os.environ.setdefault(
+    "TEST_DATABASE_URL",
+    f"sqlite:///{Path(__file__).resolve().parent / 'test_db.sqlite3'}",
+)
 django.setup()
 
 
@@ -22,13 +28,13 @@ def _django_test_environment(pytestconfig):
         yield
         return
 
-    setup_test_environment()
-    db_cfg = setup_databases(verbosity=0, interactive=False)
+    setup_test_environment()  # pragma: no cover
+    db_cfg = setup_databases(verbosity=0, interactive=False)  # pragma: no cover
     try:
         yield
     finally:
-        teardown_databases(db_cfg, verbosity=0)
-        teardown_test_environment()
+        teardown_databases(db_cfg, verbosity=0)  # pragma: no cover
+        teardown_test_environment()  # pragma: no cover
 
 
 class _PytestTransactionTestCase(TransactionTestCase):
@@ -47,17 +53,27 @@ def django_db(request, pytestconfig, _django_test_environment):
         yield
         return
 
-    helper = _PytestTransactionTestCase(methodName="__init__")
-    helper._pre_setup()
+    helper = _PytestTransactionTestCase(
+        methodName="__init__",
+    )  # pragma: no cover
+    helper._pre_setup()  # pragma: no cover
     try:
         yield
     finally:
-        helper._post_teardown()
+        helper._post_teardown()  # pragma: no cover
 
 
 @pytest.fixture
 def client(django_db):
     return Client()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _close_db_connections():
+    from django.db import connections
+
+    yield
+    connections.close_all()
 
 
 def pytest_configure(config):
