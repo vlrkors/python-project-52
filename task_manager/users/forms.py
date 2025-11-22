@@ -28,6 +28,8 @@ class UserCreateForm(UserCreationForm):
         help_text=_("Enter the same password again for verification."),
     )
 
+    label_suffix = ""
+
     class Meta:
         model = User
         fields = [
