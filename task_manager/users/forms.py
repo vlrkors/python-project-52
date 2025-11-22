@@ -10,13 +10,21 @@ class UserCreateForm(UserCreationForm):
     password1 = forms.CharField(
         required=True,
         label=_("Password"),
-        widget=forms.PasswordInput,
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": _("Password"),
+            }
+        ),
         help_text=_("Your password must contain at least 3 characters."),
     )
     password2 = forms.CharField(
         required=True,
         label=_("Confirm Password"),
-        widget=forms.PasswordInput,
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": _("Confirm Password"),
+            }
+        ),
         help_text=_("Enter the same password again for verification."),
     )
 
@@ -35,9 +43,24 @@ class UserCreateForm(UserCreationForm):
             "username": _("Username"),
         }
         widgets = {
-            "first_name": forms.TextInput(attrs={"required": True}),
-            "last_name": forms.TextInput(attrs={"required": True}),
-            "username": forms.TextInput(attrs={"required": True}),
+            "first_name": forms.TextInput(
+                attrs={
+                    "required": True,
+                    "placeholder": _("First name"),
+                }
+            ),
+            "last_name": forms.TextInput(
+                attrs={
+                    "required": True,
+                    "placeholder": _("Last name"),
+                }
+            ),
+            "username": forms.TextInput(
+                attrs={
+                    "required": True,
+                    "placeholder": _("Username"),
+                }
+            ),
         }
 
     def clean(self):
