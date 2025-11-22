@@ -196,7 +196,7 @@ AUTH_PASSWORD_VALIDATORS = []
 USE_I18N = True
 USE_TZ = True
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'ru'
 LANGUAGES = [
     ('en', _('English')),
     ('ru', _('Russian')),
