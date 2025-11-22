@@ -24,6 +24,7 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+IS_TESTING = os.getenv("PYTEST_CURRENT_TEST") is not None
 
 
 def _to_bool(value: str, default: bool = False) -> bool:
@@ -137,7 +138,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'task_manager.rollbar_middleware.CustomRollbarNotifierMiddleware',
 ]
 
 ROOT_URLCONF = 'task_manager.urls'
@@ -164,7 +164,13 @@ WSGI_APPLICATION = 'task_manager.wsgi.application'
 # Database
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 
-if DATABASE_URL.startswith("sqlite"):
+if IS_TESTING:
+    test_db_url = os.getenv(
+        "TEST_DATABASE_URL",
+        f"sqlite:///{BASE_DIR / 'test_db.sqlite3'}",
+    )
+    DATABASES = {"default": _sqlite_db_config(test_db_url)}
+elif DATABASE_URL.startswith("sqlite"):
     DATABASES = {"default": _sqlite_db_config(DATABASE_URL)}
 else:
     try:
@@ -222,13 +228,18 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-ROLLBAR = {
-    'access_token': os.getenv('ROLLBAR_ACCESS_TOKEN', 'ROLLBAR_TOKEN'),
-    'environment': os.getenv('ROLLBAR_ENV', 'development'),
-    'code_version': '1.0',
-    'root': BASE_DIR,
-}
+_ROLLBAR_ACCESS_TOKEN = os.getenv('ROLLBAR_ACCESS_TOKEN', '').strip()
+_ROLLBAR_ENV = os.getenv('ROLLBAR_ENV', 'development')
+_ROLLBAR_CODE_VERSION = os.getenv('ROLLBAR_CODE_VERSION', '1.0')
 
+ROLLBAR = None
 
-if ROLLBAR['access_token']:
+if _ROLLBAR_ACCESS_TOKEN:
+    ROLLBAR = {
+        'access_token': _ROLLBAR_ACCESS_TOKEN,
+        'environment': _ROLLBAR_ENV,
+        'code_version': _ROLLBAR_CODE_VERSION,
+        'root': BASE_DIR,
+    }
     rollbar.init(**ROLLBAR)
+    MIDDLEWARE.append('task_manager.rollbar_middleware.CustomRollbarNotifierMiddleware')
