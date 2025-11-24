@@ -76,6 +76,8 @@ allowed_hosts = {
 }
 ALLOWED_HOSTS = sorted(_default_allowed_hosts | allowed_hosts)
 
+_allow_http_origins = DEBUG or IS_TESTING
+
 
 def _host_to_csrf_origins(host: str) -> set[str]:
     host = host.strip()
@@ -88,18 +90,20 @@ def _host_to_csrf_origins(host: str) -> set[str]:
         target = f"*.{trimmed}"
     else:
         target = host
-    return {
-        f"http://{target}",
-        f"https://{target}",
-    }
+    origins = {f"https://{target}"}
+    if _allow_http_origins:
+        origins.add(f"http://{target}")
+    return origins
 
 
 _default_csrf_trusted_origins = {
-    "http://localhost",
     "https://localhost",
-    "http://127.0.0.1",
     "https://127.0.0.1",
 }
+if _allow_http_origins:
+    _default_csrf_trusted_origins.update(
+        {"http://localhost", "http://127.0.0.1"}
+    )
 _csrf_env = os.getenv("CSRF_TRUSTED_ORIGINS", "").strip()
 _csrf_extra_origins = {
     origin.strip()

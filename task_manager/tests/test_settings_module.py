@@ -57,6 +57,8 @@ def test_allowed_hosts_and_csrf_from_env(monkeypatch):
         {
             "ALLOWED_HOSTS": "example.com,.foo.com",
             "CSRF_TRUSTED_ORIGINS": "https://custom.local",
+            "DEBUG": "false",
+            "PYTEST_RUNNING": "",
         },
     )
     assert "example.com" in module.ALLOWED_HOSTS
@@ -70,6 +72,35 @@ def test_allowed_hosts_and_csrf_from_env(monkeypatch):
 def test_host_to_csrf_origins_empty_and_dot():
     assert settings._host_to_csrf_origins("") == set()
     assert settings._host_to_csrf_origins(".") == set()
+
+
+def test_host_to_csrf_origins_https_only_when_not_debug(monkeypatch):
+    monkeypatch.setattr(settings.sys, "argv", ["manage.py"])
+    module = _load_settings_copy(
+        monkeypatch,
+        {
+            "DEBUG": "false",
+            "PYTEST_RUNNING": "",
+            "PYTEST_CURRENT_TEST": None,
+        },
+    )
+    origins = module._host_to_csrf_origins("example.com")
+    assert origins == {"https://example.com"}
+
+
+def test_host_to_csrf_origins_allows_http_in_debug(monkeypatch):
+    monkeypatch.setattr(settings.sys, "argv", ["manage.py"])
+    module = _load_settings_copy(
+        monkeypatch,
+        {
+            "DEBUG": "true",
+            "PYTEST_RUNNING": "",
+            "PYTEST_CURRENT_TEST": None,
+        },
+    )
+    origins = module._host_to_csrf_origins("example.com")
+    assert "http://example.com" in origins
+    assert "https://example.com" in origins
 
 
 def test_database_sqlite_branch(monkeypatch):
