@@ -42,13 +42,14 @@ def test_user_create_form_validation_errors():
 
 @pytest.mark.django_db
 def test_user_create_form_calls_add_error_on_mismatch(monkeypatch):
+    base_pwd = get_random_string(10)
     form = UserCreateForm(
         data={
             "first_name": "John",
             "last_name": "Doe",
             "username": "john-mismatch",
-            "password1": "longpassword",
-            "password2": "longpassworD",
+            "password1": base_pwd,
+            "password2": base_pwd + "x",
         }
     )
     called = {}
@@ -68,14 +69,15 @@ def test_user_update_form_allows_same_username():
     user = User.objects.create_user(
         username="same", password="pwd", first_name="A", last_name="B"
     )
+    pwd = get_random_string(10)
     form = UserUpdateForm(
         instance=user,
         data={
             "first_name": "A",
             "last_name": "B",
             "username": "same",
-            "password1": "pwd123",
-            "password2": "pwd123",
+            "password1": pwd,
+            "password2": pwd,
         },
     )
     assert form.is_valid()
@@ -87,14 +89,15 @@ def test_user_update_form_allows_new_unique_username():
     user = User.objects.create_user(
         username="old", password="pwd", first_name="A", last_name="B"
     )
+    pwd = get_random_string(10)
     form = UserUpdateForm(
         instance=user,
         data={
             "first_name": "A",
             "last_name": "B",
             "username": "newunique",
-            "password1": "pwd123",
-            "password2": "pwd123",
+            "password1": pwd,
+            "password2": pwd,
         },
     )
     assert form.is_valid()
@@ -115,8 +118,8 @@ def test_user_update_form_unique_username_validation():
             "first_name": "John",
             "last_name": "Doe",
             "username": other.username,
-            "password1": "pwd123",
-            "password2": "pwd123",
+            "password1": get_random_string(10),
+            "password2": get_random_string(10),
         },
     )
     assert not form.is_valid()
@@ -136,8 +139,8 @@ def test_user_update_forbidden_for_another_user(client):
             "first_name": user.first_name,
             "last_name": user.last_name,
             "username": "newname",
-            "password1": "pwd123",
-            "password2": "pwd123",
+            "password1": get_random_string(10),
+            "password2": get_random_string(10),
         },
         follow=True,
     )
@@ -189,7 +192,7 @@ def test_user_delete_forbidden_for_other_user(client):
 
 @pytest.mark.django_db
 def test_login_view_redirects_to_index(client):
-    password = "pwd123"
+    password = get_random_string(10)
     user = User.objects.create_user(username="loginuser", password=password)
     response = client.post(
         reverse("login"),
@@ -201,18 +204,19 @@ def test_login_view_redirects_to_index(client):
 
 @pytest.mark.django_db
 def test_user_create_form_save_sets_password():
+    password = get_random_string(10)
     form = UserCreateForm(
         data={
             "first_name": "Ann",
             "last_name": "Smith",
             "username": "ann",
-            "password1": "secret",
-            "password2": "secret",
+            "password1": password,
+            "password2": password,
         }
     )
     assert form.is_valid()
     user = form.save()
-    assert user.check_password("secret")
+    assert user.check_password(password)
 
 
 @pytest.mark.django_db
@@ -225,8 +229,8 @@ def test_user_update_requires_login_message(client):
             "first_name": "",
             "last_name": "",
             "username": "target",
-            "password1": "pwd123",
-            "password2": "pwd123",
+            "password1": get_random_string(10),
+            "password2": get_random_string(10),
         },
         follow=True,
     )
@@ -244,8 +248,9 @@ def test_user_delete_requires_login_message(client):
 
 @pytest.mark.django_db
 def test_user_logout_sets_message(client):
-    User.objects.create_user(username="target", password="pwd")
-    client.login(username="target", password="pwd")
+    password = get_random_string(10)
+    User.objects.create_user(username="target", password=password)
+    client.login(username="target", password=password)
 
     response = client.post(reverse("logout"), follow=True)
     messages = [m.message for m in get_messages(response.wsgi_request)]

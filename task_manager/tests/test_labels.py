@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.utils.crypto import get_random_string
 
 from task_manager.labels.models import Label
 from task_manager.statuses.models import Status
@@ -13,14 +14,17 @@ User = get_user_model()
 class TestLabelCRUD:
     @pytest.fixture
     def user(self):
-        return User.objects.create_user(
+        password = "pass_" + get_random_string(8)
+        user = User.objects.create_user(
             username='testuser',
-            password='password123',
+            password=password,
         )
+        user.raw_password = password
+        return user
 
     @pytest.fixture
     def logged_client(self, client, user):
-        client.login(username='testuser', password='password123')
+        client.login(username='testuser', password=user.raw_password)
         return client
 
     @pytest.fixture
