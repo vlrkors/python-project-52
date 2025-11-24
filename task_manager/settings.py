@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 
 import os
+import sys
 import rollbar
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -24,7 +25,11 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-IS_TESTING = os.getenv("PYTEST_CURRENT_TEST") is not None
+IS_TESTING = (
+    os.getenv("PYTEST_CURRENT_TEST") is not None
+    or os.getenv("PYTEST_RUNNING") == "true"
+    or any("pytest" in arg for arg in sys.argv)
+)
 
 
 def _to_bool(value: str, default: bool = False) -> bool:
