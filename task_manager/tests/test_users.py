@@ -124,7 +124,7 @@ def test_user_update_form_unique_username_validation():
 @pytest.mark.django_db
 def test_user_update_forbidden_for_another_user(client):
     user = User.objects.create_user(username="owner", password="pwd")
-    other = User.objects.create_user(username="stranger", password="pwd")
+    User.objects.create_user(username="stranger", password="pwd")
     client.login(username="stranger", password="pwd")
 
     response = client.post(
@@ -141,7 +141,10 @@ def test_user_update_forbidden_for_another_user(client):
 
     assert response.status_code == 200
     messages = [m.message for m in get_messages(response.wsgi_request)]
-    assert any("permission" in msg.lower() or "прав" in msg.lower() for msg in messages)
+    assert any(
+        "permission" in msg.lower() or "прав" in msg.lower()
+        for msg in messages
+    )
     user.refresh_from_db()
     assert user.username == "owner"
 
@@ -157,19 +160,27 @@ def test_user_delete_protected_when_used_in_task(client):
 
     assert response.status_code == 200
     messages = [m.message for m in get_messages(response.wsgi_request)]
-    assert any("impossible to delete" in msg.lower() or "невозможно удалить" in msg.lower() for msg in messages)
+    assert any(
+        "impossible to delete" in msg.lower()
+        or "невозможно удалить" in msg.lower()
+        for msg in messages
+    )
     assert User.objects.filter(id=user.id).exists()
+
 
 @pytest.mark.django_db
 def test_user_delete_forbidden_for_other_user(client):
     owner = User.objects.create_user(username="owner", password="pwd")
-    other = User.objects.create_user(username="other", password="pwd")
+    User.objects.create_user(username="other", password="pwd")
     client.login(username="other", password="pwd")
 
     response = client.post(reverse("user_delete", args=[owner.id]), follow=True)
 
     messages = [m.message for m in get_messages(response.wsgi_request)]
-    assert any("permission" in msg.lower() or "прав" in msg.lower() for msg in messages)
+    assert any(
+        "permission" in msg.lower() or "прав" in msg.lower()
+        for msg in messages
+    )
     assert User.objects.filter(id=owner.id).exists()
 
 
@@ -230,7 +241,7 @@ def test_user_delete_requires_login_message(client):
 
 @pytest.mark.django_db
 def test_user_logout_sets_message(client):
-    user = User.objects.create_user(username="target", password="pwd")
+    User.objects.create_user(username="target", password="pwd")
     client.login(username="target", password="pwd")
 
     response = client.post(reverse("logout"), follow=True)

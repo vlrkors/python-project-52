@@ -42,7 +42,7 @@ def test_task_list_self_tasks_filter(client):
 def test_task_delete_denied_for_non_author(client):
     status = Status.objects.create(name="Open")
     author = User.objects.create_user(username="author", password="pwd")
-    stranger = User.objects.create_user(username="stranger", password="pwd")
+    User.objects.create_user(username="stranger", password="pwd")
     task = Task.objects.create(name="Protected", status=status, author=author)
 
     client.login(username="stranger", password="pwd")
@@ -52,7 +52,10 @@ def test_task_delete_denied_for_non_author(client):
     assert Task.objects.filter(id=task.id).exists()
     messages = [m.message for m in get_messages(response.wsgi_request)]
     assert messages  # должно быть сообщение об ошибке
-    assert any("author" in msg.lower() or "автор" in msg.lower() for msg in messages)
+    assert any(
+        "author" in msg.lower() or "автор" in msg.lower()
+        for msg in messages
+    )
 
 
 @pytest.mark.django_db
@@ -82,7 +85,11 @@ def test_task_create_sets_author(client):
 def test_task_delete_requires_login(client):
     status = Status.objects.create(name="Open")
     author = User.objects.create_user(username="author", password="pwd")
-    task = Task.objects.create(name="Auth required", status=status, author=author)
+    task = Task.objects.create(
+        name="Auth required",
+        status=status,
+        author=author,
+    )
 
     response = client.post(reverse("task_delete", args=[task.id]), follow=True)
 
