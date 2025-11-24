@@ -76,8 +76,8 @@ def test_user_create_form_too_short_add_error(monkeypatch):
             "first_name": "ShortAdd",
             "last_name": "Hook",
             "username": "short_add",
-            "password1": "aa",
-            "password2": "aa",
+            "password1": get_random_string(2),
+            "password2": get_random_string(2),
         }
     )
     called = {}
