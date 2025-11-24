@@ -2,6 +2,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from django.utils.crypto import get_random_string
 from whitenoise.storage import CompressedManifestStaticFilesStorage
 
 from task_manager.rollbar_middleware import CustomRollbarNotifierMiddleware
@@ -55,3 +56,35 @@ def test_compressed_storage_returns_original_name(settings):
     except ValueError:
         result = "missing.css"
     assert result == "missing.css"
+
+
+def test_rollbar_middleware_handles_missing_token(monkeypatch):
+    # Если токен не задан, middleware не выбрасывает ошибок и возвращает пустой payload
+    monkeypatch.setattr(
+        "task_manager.rollbar_middleware.settings",
+        SimpleNamespace(ROLLBAR=None),
+    )
+    middleware = _build_middleware()
+    user = SimpleNamespace(
+        is_anonymous=False,
+        id=1,
+        username="u",
+        email="e@example.com",
+    )
+    payload = middleware.get_payload_data(_build_request(user), Exception())
+    assert payload["person"]["username"] == "u"
+
+
+def test_rollbar_payload_includes_all_fields():
+    middleware = _build_middleware()
+    uid = get_random_string(6)
+    email = f"{uid}@example.com"
+    user = SimpleNamespace(
+        is_anonymous=False,
+        id=42,
+        username=uid,
+        email=email,
+    )
+    payload = middleware.get_payload_data(_build_request(user), Exception())
+    assert payload["person"]["id"] == 42
+    assert payload["person"]["email"] == email
