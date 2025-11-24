@@ -59,7 +59,8 @@ def test_compressed_storage_returns_original_name(settings):
 
 
 def test_rollbar_middleware_handles_missing_token(monkeypatch):
-    # Если токен не задан, middleware не выбрасывает ошибок и возвращает пустой payload
+    # Если токен не задан, middleware не выбрасывает ошибок и возвращает
+    # пустой payload.
     monkeypatch.setattr(
         "task_manager.rollbar_middleware.settings",
         SimpleNamespace(ROLLBAR=None),
