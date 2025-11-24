@@ -1,9 +1,7 @@
 .idea
 /.env
 /staticfiles/
-/django_bootstrap5/
 /whitenoise/
-/conftest.py
 /db.sqlite3
 /pytest.ini
 /.pre-commit-config.yaml
