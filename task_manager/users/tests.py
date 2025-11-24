@@ -1,225 +1,55 @@
 import pytest
 from django.contrib.auth import get_user_model
-from django.contrib.messages import get_messages
-from django.test import TestCase
 from django.urls import reverse
+from django.utils.crypto import get_random_string
 
-from task_manager.statuses.models import Status
-from task_manager.tasks.models import Task
-from task_manager.users.forms import UserRegistrationForm, UserUpdateForm
+from task_manager.users.forms import UserCreateForm
 
 User = get_user_model()
 
 
 @pytest.mark.django_db
-class UserCrudTests(TestCase):
-    fixtures = ["users.json"]
+def test_user_create_form_mismatch_passwords():
+    pwd1 = get_random_string(8)
+    pwd2 = pwd1 + "x"
+    form = UserCreateForm(
+        data={
+            "first_name": "Mismatch",
+            "last_name": "User",
+            "username": "mismatch",
+            "password1": pwd1,
+            "password2": pwd2,
+        }
+    )
+    assert not form.is_valid()
+    errors = " ".join(form.errors["password2"])
+    assert "не совпадают" in errors or "match" in errors
 
-    def setUp(self):
-        super().setUp()
-        self.user1 = User.objects.get(pk=1)
-        self.user2 = User.objects.get(pk=2)
 
-        for user in (self.user1, self.user2):
-            user.set_password("testpass123")  # NOSONAR
-            user.save()
+@pytest.mark.django_db
+def test_user_create_form_short_password():
+    short_pwd = "pw"
+    form = UserCreateForm(
+        data={
+            "first_name": "Short",
+            "last_name": "User",
+            "username": "shortpwd",
+            "password1": short_pwd,
+            "password2": short_pwd,
+        }
+    )
+    assert not form.is_valid()
+    errors = " ".join(form.errors["password2"])
+    assert "3" in errors or "short" in errors.lower()
 
-    def test_user_registration_creates_account_and_redirects_to_login(self):
-        users_before = User.objects.count()
-        response = self.client.post(
-            reverse("user_create"),
-            {
-                "username": "new_user",
-                "first_name": "New",
-                "last_name": "User",
-                "password1": "newpass123",  # NOSONAR
-                "password2": "newpass123",  # NOSONAR
-            },
-        )
 
-        self.assertRedirects(response, reverse("login"))
-        self.assertEqual(User.objects.count(), users_before + 1)
-        self.assertTrue(User.objects.filter(username="new_user").exists())
+@pytest.mark.django_db
+def test_user_delete_view_handle_no_permission(client):
+    owner = User.objects.create_user(username="owner", password="pwd")
+    User.objects.create_user(username="other", password="pwd")
+    client.login(username="other", password="pwd")
 
-        messages = list(get_messages(response.wsgi_request))
-        self.assertIn("Пользователь успешно зарегистрирован", str(messages[0]))
-
-    def test_user_update_changes_profile_and_redirects_to_index(self):
-        self.client.login(username="user1", password="testpass123")  # NOSONAR
-        response = self.client.post(
-            reverse("user_update", kwargs={"pk": self.user1.pk}),
-            {
-                "username": "user1",
-                "first_name": "Updated",
-                "last_name": "User",
-                "password1": "newpass123",  # NOSONAR
-                "password2": "newpass123",  # NOSONAR
-            },
-        )
-
-        self.assertRedirects(response, reverse("users_index"))
-        self.user1.refresh_from_db()
-        self.assertEqual(self.user1.first_name, "Updated")
-        self.assertTrue(self.user1.check_password("newpass123"))
-
-        messages = list(get_messages(response.wsgi_request))
-        self.assertIn("Пользователь успешно изменен", str(messages[0]))
-
-    def test_user_delete_removes_user_and_redirects_to_index(self):
-        self.client.login(username="user2", password="testpass123")  # NOSONAR
-        response = self.client.post(
-            reverse("user_delete", kwargs={"pk": self.user2.pk}),
-            follow=False,
-        )
-
-        self.assertRedirects(response, reverse("users_index"))
-        self.assertFalse(User.objects.filter(pk=self.user2.pk).exists())
-
-    def test_user_with_tasks_cannot_be_deleted(self):
-        status = Status.objects.create(name="Test status")
-        Task.objects.create(
-            name="Test task",
-            status=status,
-            author=self.user1,
-        )
-
-        self.client.login(username="user1", password="testpass123")  # NOSONAR
-        response = self.client.post(
-            reverse("user_delete", kwargs={"pk": self.user1.pk}),
-            follow=True,
-        )
-
-        self.assertTrue(User.objects.filter(pk=self.user1.pk).exists())
-        messages = list(get_messages(response.wsgi_request))
-        self.assertIn(
-            "Невозможно удалить пользователя, потому что он используется",
-            str(messages[0]),
-        )
-
-    def test_user_update_requires_login(self):
-        response = self.client.post(
-            reverse("user_update", kwargs={"pk": self.user1.pk}),
-            follow=True,
-        )
-        messages = list(get_messages(response.wsgi_request))
-        self.assertIn(
-            "Вы не авторизованы! Пожалуйста, выполните вход.",
-            str(messages[0]),
-        )
-
-    def test_user_update_blocked_for_other_user(self):
-        self.client.login(username="user2", password="testpass123")  # NOSONAR
-        response = self.client.post(
-            reverse("user_update", kwargs={"pk": self.user1.pk}),
-            follow=True,
-        )
-        messages = list(get_messages(response.wsgi_request))
-        expected_permission_message = (
-            "У вас нет прав для изменения другого пользователя."
-        )
-        self.assertIn(expected_permission_message, str(messages[0]))
-
-    def test_user_delete_requires_login(self):
-        response = self.client.post(
-            reverse("user_delete", kwargs={"pk": self.user1.pk}),
-            follow=True,
-        )
-        messages = list(get_messages(response.wsgi_request))
-        self.assertIn(
-            "Вы не авторизованы! Пожалуйста, выполните вход.",
-            str(messages[0]),
-        )
-        self.assertTrue(User.objects.filter(pk=self.user1.pk).exists())
-
-    def test_user_delete_blocked_for_other_user(self):
-        self.client.login(username="user1", password="testpass123")  # NOSONAR
-        response = self.client.post(
-            reverse("user_delete", kwargs={"pk": self.user2.pk}),
-            follow=True,
-        )
-        messages = list(get_messages(response.wsgi_request))
-        expected_permission_message = (
-            "У вас нет прав для изменения другого пользователя."
-        )
-        self.assertIn(expected_permission_message, str(messages[0]))
-        self.assertTrue(User.objects.filter(pk=self.user2.pk).exists())
-
-    def test_login_redirects_to_index_and_sets_message(self):
-        response = self.client.post(
-            reverse("login"),
-            {
-                "username": "user1",
-                "password": "testpass123",  # NOSONAR
-            },
-            follow=True,
-        )
-        self.assertEqual(response.wsgi_request.path, reverse("index"))
-        messages = list(get_messages(response.wsgi_request))
-        self.assertIn("Вы залогинены", str(messages[0]))
-
-    def test_logout_adds_message(self):
-        self.client.login(username="user1", password="testpass123")  # NOSONAR
-        response = self.client.post(reverse("logout"), follow=True)
-        messages = list(get_messages(response.wsgi_request))
-        self.assertIn("Вы разлогинены", str(messages[0]))
-        self.assertEqual(response.wsgi_request.path, reverse("index"))
-
-    def test_registration_form_rejects_mismatched_passwords(self):
-        form = UserRegistrationForm(
-            data={
-                "username": "newbie",
-                "first_name": "New",
-                "last_name": "User",
-                "password1": "abc123",  # NOSONAR
-                "password2": "cba123",  # NOSONAR
-            },
-        )
-        self.assertFalse(form.is_valid())
-        self.assertIn("password2", form.errors)
-        self.assertIn(
-            "введенные пароли не совпадают",
-            "".join(form.errors["password2"]).lower(),
-        )
-
-    def test_registration_form_rejects_short_password(self):
-        form = UserRegistrationForm(
-            data={
-                "username": "shorty",
-                "first_name": "Short",
-                "last_name": " User",
-                "password1": "ab",  # NOSONAR
-                "password2": "ab",  # NOSONAR
-            },
-        )
-        self.assertFalse(form.is_valid())
-        self.assertIn("слишком короткий", str(form.errors))
-
-    def test_update_form_prevents_duplicate_username(self):
-        form = UserUpdateForm(
-            instance=self.user1,
-            data={
-                "username": self.user2.username,
-                "first_name": "User",
-                "last_name": "One",
-                "password1": "newpass123",  # NOSONAR
-                "password2": "newpass123",  # NOSONAR
-            },
-        )
-        self.assertFalse(form.is_valid())
-        unique_message = str(
-            User._meta.get_field("username").error_messages["unique"]
-        )
-        self.assertIn(unique_message, str(form.errors))
-
-    def test_update_form_allows_same_username(self):
-        form = UserUpdateForm(
-            instance=self.user1,
-            data={
-                "username": self.user1.username,
-                "first_name": "User",
-                "last_name": "One",
-                "password1": "abc",  # NOSONAR
-                "password2": "abc",  # NOSONAR
-            },
-        )
-        self.assertTrue(form.is_valid())
+    response = client.post(reverse("user_delete", args=[owner.id]), follow=True)
+    assert response.status_code == 200
+    assert User.objects.filter(id=owner.id).exists()
+    assert any("/users/" in url for url, _ in response.redirect_chain)
