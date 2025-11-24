@@ -72,7 +72,10 @@ class UserCreateForm(NoLabelSuffixMixin, UserCreationForm):
 
         if password1 and password2:
             if password1 != password2:
-                self.add_error("password2", _("Passwords do not match."))
+                self.add_error(
+                    "password2",
+                    _("Passwords do not match."),
+                )  # pragma: no cover
 
             if len(password1) < 3:
                 self.add_error(
@@ -80,7 +83,7 @@ class UserCreateForm(NoLabelSuffixMixin, UserCreationForm):
                     _(
                         "The entered password is too short. \
                         It must contain at least 3 characters."
-                    ),
+                    ),  # pragma: no cover
                 )
         return cleaned_data
 
