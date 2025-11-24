@@ -14,8 +14,7 @@ run:
 	uv run python manage.py runserver
 
 render-start:
-	#uv run gunicorn task_manager.wsgi
-	& "$(PYTHON)" -m waitress --listen=0.0.0.0 task_manager.wsgi:application
+	uv run gunicorn task_manager.wsgi
 
 build:
 	./build.sh
