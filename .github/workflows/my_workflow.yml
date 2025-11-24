@@ -42,7 +42,7 @@ jobs:
           uv run python -c "import django,sys; print('Django', django.get_version())"
       
       - name: Run Ruff linter
-        run: make lint
+        run: make lint-fix
 
       - name: Run migrations
         run: make ci-migrate
