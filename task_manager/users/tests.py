@@ -44,6 +44,24 @@ def test_user_create_form_short_password():
 
 
 @pytest.mark.django_db
+def test_user_create_form_short_and_mismatch_combined():
+    form = UserCreateForm(
+        data={
+            "first_name": "Combo",
+            "last_name": "User",
+            "username": "combo",
+            "password1": "a",
+            "password2": "b",
+        }
+    )
+    assert not form.is_valid()
+    errors = " ".join(form.errors["password2"])
+    assert errors
+    assert ("не совпадают" in errors) or ("match" in errors.lower())
+    assert ("3" in errors) or ("short" in errors.lower())
+
+
+@pytest.mark.django_db
 def test_user_delete_view_handle_no_permission(client):
     owner = User.objects.create_user(username="owner", password="pwd")
     User.objects.create_user(username="other", password="pwd")
