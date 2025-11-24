@@ -12,18 +12,23 @@ User = get_user_model()
 
 class TaskFilter(django_filters.FilterSet):
     status = django_filters.ModelChoiceFilter(
-        queryset=Status.objects.all(),
-        label=_("Status")
+        queryset=Status.objects.all(), label=_("Status")
     )
     executor = django_filters.ModelChoiceFilter(
-        queryset=User.objects.all(),
-        label=_("Executor")
+        queryset=User.objects.all(), label=_("Executor")
     )
     labels = django_filters.ModelChoiceFilter(
-        queryset=Label.objects.all(),
-        label=_("Label")
+        queryset=Label.objects.all(), label=_("Label")
     )
 
     class Meta:
         model = Task
-        fields = ['status', 'executor', 'labels']
+        fields = ["status", "executor", "labels"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.form.label_suffix = ""
+        for name in ("status", "executor", "labels"):
+            field = self.form.fields.get(name)
+            if field:
+                field.widget.attrs.setdefault("class", "form-select")
