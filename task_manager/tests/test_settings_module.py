@@ -84,8 +84,8 @@ def test_host_to_csrf_origins_https_only_when_not_debug(monkeypatch):
             "PYTEST_CURRENT_TEST": None,
         },
     )
-    origins = module._host_to_csrf_origins("example.com")
-    assert origins == {"https://example.com"}
+    origins = module._host_to_csrf_origins("localhost")
+    assert origins == {"https://localhost"}
 
 
 def test_host_to_csrf_origins_allows_http_in_debug(monkeypatch):
@@ -98,9 +98,9 @@ def test_host_to_csrf_origins_allows_http_in_debug(monkeypatch):
             "PYTEST_CURRENT_TEST": None,
         },
     )
-    origins = module._host_to_csrf_origins("example.com")
-    assert "http://example.com" in origins
-    assert "https://example.com" in origins
+    origins = module._host_to_csrf_origins("localhost")
+    assert "http://localhost" in origins
+    assert "https://localhost" in origins
 
 
 def test_database_sqlite_branch(monkeypatch):

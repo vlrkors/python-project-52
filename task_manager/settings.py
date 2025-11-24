@@ -91,8 +91,9 @@ def _host_to_csrf_origins(host: str) -> set[str]:
     else:
         target = host
     origins = {f"https://{target}"}
-    if _allow_http_origins:
-        origins.add(f"http://{target}")
+    if _allow_http_origins and target in {"localhost", "127.0.0.1"}:
+        # HTTP добавляем только для локальной разработки/тестов.
+        origins.add(f"http://{target}")  # dev only
     return origins
 
 
@@ -102,7 +103,10 @@ _default_csrf_trusted_origins = {
 }
 if _allow_http_origins:
     _default_csrf_trusted_origins.update(
-        {"http://localhost", "http://127.0.0.1"}
+        {
+            "http://localhost",
+            "http://127.0.0.1",
+        }
     )
 _csrf_env = os.getenv("CSRF_TRUSTED_ORIGINS", "").strip()
 _csrf_extra_origins = {
