@@ -1,55 +1,45 @@
-SHELL := powershell.exe
-.SHELLFLAGS := -NoProfile -Command
+install:
+	uv sync
 
-ENV_VARS = $$env:UV_CACHE_DIR="$(CURDIR)/.uvcache"; $$env:TMP="$(CURDIR)/.tmp"; $$env:TEMP="$(CURDIR)/.tmp";
-PYTHON = $(CURDIR)/.venv/Scripts/python.exe
+dev-install:
+	uv sync --group dev
 
-.PHONY: env-dirs install dev-install migrate collectstatic run render-start build lint lint-fix test coverage ci-install ci-migrate ci-test
+migrate:
+	uv run python manage.py migrate
 
-env-dirs:
-	@python -c "from pathlib import Path; [Path(n).mkdir(parents=True, exist_ok=True) for n in ('.uvcache', '.tmp')]"
-
-install: env-dirs
-	$(ENV_VARS) & "$(PYTHON)" -m uv sync
-
-dev-install: env-dirs
-	$(ENV_VARS) & "$(PYTHON)" -m uv sync --group dev
-
-migrate: env-dirs
-	$(ENV_VARS) & "$(PYTHON)" manage.py migrate
-
-collectstatic: env-dirs
-	$(ENV_VARS) & "$(PYTHON)" manage.py collectstatic --noinput
+collectstatic:
+	uv run python manage.py collectstatic --noinput
 
 run:
-	& "$(PYTHON)" manage.py runserver
+	uv run python manage.py runserver
 
 render-start:
-	& "$(PYTHON)" -m gunicorn task_manager.wsgi
+	uv run gunicorn task_manager.wsgi
 
 build:
 	./build.sh
 
-lint: env-dirs
-	$(ENV_VARS) & "$(PYTHON)" -m ruff check
+lint:
+	uv run ruff check
 
-lint-fix: env-dirs
-	$(ENV_VARS) & "$(PYTHON)" -m ruff check --fix
+lint-fix:
+	uv run ruff check --fix
 
-test: env-dirs
-	$(ENV_VARS) & "$(PYTHON)" -m pytest --ds=task_manager.settings --reuse-db
+test:
+	uv run pytest --ds=task_manager.settings --reuse-db
 
-coverage: env-dirs
-	$(ENV_VARS) & "$(PYTHON)" -m coverage run --omit='*/migrations/*,*/settings.py,*/venv/*,*/.venv/*' -m pytest --ds=task_manager.settings
-	$(ENV_VARS) & "$(PYTHON)" -m coverage report --show-missing --skip-covered
+coverage:
+	uv run coverage run --omit='*/migrations/*,*/settings.py,*/venv/*,*/.venv/*' -m pytest --ds=task_manager.settings
+	uv run coverage report --show-missing --skip-covered
 
-ci-install: env-dirs
-	$(ENV_VARS) & "$(PYTHON)" -m uv sync --group dev
+ci-install:
+	uv sync --group dev
 
-ci-migrate: env-dirs
-	$(ENV_VARS) & "$(PYTHON)" manage.py makemigrations --noinput; $(ENV_VARS) & "$(PYTHON)" manage.py migrate --noinput
+ci-migrate:
+	uv run python manage.py makemigrations --noinput && \
+	uv run python manage.py migrate --noinput
 
-ci-test: env-dirs
-	$(ENV_VARS) & "$(PYTHON)" -m coverage run --omit='*/migrations/*,*/settings.py,*/venv/*,*/.venv/*' -m pytest --ds=task_manager.settings --reuse-db
-	$(ENV_VARS) & "$(PYTHON)" -m coverage xml
-	$(ENV_VARS) & "$(PYTHON)" -m coverage report --show-missing --skip-covered
+ci-test:
+	uv run coverage run --omit='*/migrations/*,*/settings.py,*/venv/*,*/.venv/*' -m pytest --ds=task_manager.settings --reuse-db
+	uv run coverage xml
+	uv run coverage report --show-missing --skip-covered
