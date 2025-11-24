@@ -25,8 +25,7 @@ run:
 	& "$(PYTHON)" manage.py runserver
 
 render-start:
-	# & "$(PYTHON)" -m gunicorn task_manager.wsgi
-	& "$(PYTHON)" -m waitress --listen=0.0.0.0 task_manager.wsgi:application
+	& "$(PYTHON)" -m gunicorn task_manager.wsgi
 
 build:
 	./build.sh
