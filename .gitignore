@@ -5,7 +5,6 @@
 /whitenoise/
 /conftest.py
 /db.sqlite3
-/manage.py
 /pytest.ini
 /.pre-commit-config.yaml
 /.env.example
