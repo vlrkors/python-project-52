@@ -118,6 +118,7 @@ class UserUpdateForm(UserCreateForm):
 
 
 class UserLoginForm(AuthenticationForm):
+    label_suffix = ""
     username = forms.CharField(
         label=_("Username"),
         widget=forms.TextInput(

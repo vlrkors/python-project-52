@@ -5,16 +5,12 @@ from django.utils.translation import gettext_lazy as _
 
 class User(AbstractUser):
     first_name = models.CharField(
-        max_length=150,
-        blank=False,
-        verbose_name=_('First Name')
+        max_length=150, blank=False, verbose_name=_("First name")
     )
     last_name = models.CharField(
-        max_length=150,
-        blank=False,
-        verbose_name=_('Last Name')
+        max_length=150, blank=False, verbose_name=_("Last name")
     )
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = "username"
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return f"{self.first_name} {self.last_name}"
