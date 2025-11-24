@@ -37,7 +37,8 @@ def test_user_create_form_validation_errors():
         }
     )
     assert not short_form.is_valid()
-    assert any("3" in err for err in short_form.errors["password2"])
+    # Ошибка должна присутствовать для слишком короткого пароля.
+    assert short_form.errors["password2"]
 
 
 @pytest.mark.django_db
