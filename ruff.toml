@@ -8,3 +8,5 @@ exclude = ["migrations", "settings.py", ".env", ".venv"]
 [lint]
 preview = true
 select = ["E", "F", "I", "C90"]
+
+
