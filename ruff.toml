@@ -1,5 +1,5 @@
 line-length = 80
-exclude = ["migrations", "settings.py"]
+exclude = ["migrations", "settings.py", ".env"]
 
 [lint.per-file-ignores]
   # init modules can contain the local imports, logic, unused imports
