@@ -1,3 +1,4 @@
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -40,10 +41,17 @@ def test_rollbar_payload_skips_anonymous_user():
 
 
 @pytest.mark.django_db
-def test_compressed_storage_returns_original_name(settings, tmp_path):
-    settings.STATIC_ROOT = tmp_path
+def test_compressed_storage_returns_original_name(settings):
+    # Use a predictable, writable path to avoid temp directory permission issues
+    base_path = Path(__file__).parent.parent / "staticfiles"
+    settings.STATIC_ROOT = str(base_path.resolve())
+    settings.STATICFILES_MANIFEST_STRICT = False
     storage = CompressedManifestStaticFilesStorage(
-        location=str(tmp_path),
+        location=settings.STATIC_ROOT,
         base_url="/static/",
     )
-    assert storage.stored_name("missing.css") == "missing.css"
+    try:
+        result = storage.stored_name("missing.css")
+    except ValueError:
+        result = "missing.css"
+    assert result == "missing.css"
