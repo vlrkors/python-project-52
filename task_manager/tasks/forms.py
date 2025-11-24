@@ -1,10 +1,11 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from task_manager.forms import NoLabelSuffixMixin
 from .models import Task
 
 
-class TaskForm(forms.ModelForm):
+class TaskForm(NoLabelSuffixMixin, forms.ModelForm):
     label_suffix = ""
 
     class Meta:

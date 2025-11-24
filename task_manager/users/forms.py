@@ -3,10 +3,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils.translation import gettext_lazy as _
 
+from task_manager.forms import NoLabelSuffixMixin
+
 User = get_user_model()
 
 
-class UserCreateForm(UserCreationForm):
+class UserCreateForm(NoLabelSuffixMixin, UserCreationForm):
     password1 = forms.CharField(
         required=True,
         label=_("Password"),
@@ -27,8 +29,6 @@ class UserCreateForm(UserCreationForm):
         ),
         help_text=_("Enter the same password again for verification."),
     )
-
-    label_suffix = ""
 
     class Meta:
         model = User
@@ -117,7 +117,7 @@ class UserUpdateForm(UserCreateForm):
         return username
 
 
-class UserLoginForm(AuthenticationForm):
+class UserLoginForm(NoLabelSuffixMixin, AuthenticationForm):
     label_suffix = ""
     username = forms.CharField(
         label=_("Username"),
