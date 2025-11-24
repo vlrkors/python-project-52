@@ -66,3 +66,57 @@ class TestLabelCRUD:
         response = logged_client.post(reverse('label_delete', args=[label.id]))
         assert response.status_code == 302
         assert Label.objects.filter(id=label.id).exists()
+
+    def test_label_str(self, label):
+        assert str(label) == 'Bug'
+
+    def test_create_duplicate_label_shows_error(self, logged_client, label):
+        response = logged_client.post(
+            reverse('label_create'),
+            {'name': label.name},
+        )
+        assert response.status_code == 200
+        assert Label.objects.filter(name=label.name).count() == 1
+
+
+@pytest.mark.django_db
+def test_labels_requires_login(client):
+    response = client.get(reverse('labels_index'))
+    # Должен редиректить на страницу логина
+    assert response.status_code == 302
+    assert reverse('login') in response.url
+
+
+@pytest.mark.django_db
+def test_label_create_requires_login(client):
+    response = client.post(
+        reverse('label_create'),
+        {'name': 'NeedAuth'},
+        follow=True,
+    )
+    assert response.status_code == 200
+    assert reverse('login') in response.redirect_chain[0][0]
+
+
+@pytest.mark.django_db
+def test_label_update_requires_login(client):
+    label_obj = Label.objects.create(name='Temp')
+    response = client.post(
+        reverse('label_update', args=[label_obj.id]),
+        {'name': 'X'},
+        follow=True,
+    )
+    assert response.status_code == 200
+    assert reverse('login') in response.redirect_chain[0][0]
+
+
+@pytest.mark.django_db
+def test_label_delete_requires_login(client):
+    label_obj = Label.objects.create(name='TempDel')
+    response = client.post(
+        reverse('label_delete', args=[label_obj.id]),
+        follow=True,
+    )
+    assert response.status_code == 200
+    assert reverse('login') in response.redirect_chain[0][0]
+    assert Label.objects.filter(id=label_obj.id).exists()

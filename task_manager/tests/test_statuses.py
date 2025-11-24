@@ -49,3 +49,10 @@ def test_status_delete_protected(client):
         or "невозможно удалить статус" in msg.lower()
         for msg in messages
     )
+
+
+@pytest.mark.django_db
+def test_status_requires_login(client):
+    response = client.get(reverse("statuses_index"))
+    assert response.status_code == 302
+    assert reverse("login") in response.url

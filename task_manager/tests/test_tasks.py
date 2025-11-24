@@ -96,3 +96,30 @@ def test_task_delete_requires_login(client):
     # Перенаправление на логин, задача не удалена.
     assert response.status_code == 200
     assert Task.objects.filter(id=task.id).exists()
+
+
+@pytest.mark.django_db
+def test_task_detail_requires_login(client):
+    status = Status.objects.create(name="Open")
+    author = User.objects.create_user(username="author", password="pwd")
+    task = Task.objects.create(name="Detail", status=status, author=author)
+
+    response = client.get(reverse("task_show", args=[task.id]))
+    assert response.status_code == 302
+    assert reverse("login") in response.url
+
+
+@pytest.mark.django_db
+def test_task_update_requires_login(client):
+    status = Status.objects.create(name="Open")
+    author = User.objects.create_user(username="author", password="pwd")
+    task = Task.objects.create(name="To update", status=status, author=author)
+
+    response = client.post(
+        reverse("task_update", args=[task.id]),
+        {"name": "Updated", "status": status.id},
+        follow=True,
+    )
+    assert response.status_code == 200
+    task.refresh_from_db()
+    assert task.name == "To update"
