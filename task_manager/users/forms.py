@@ -40,27 +40,27 @@ class UserCreateForm(UserCreationForm):
             "password2",
         ]
         labels = {
-            "first_name": _("First name"),
-            "last_name": _("Last name"),
-            "username": _("Username"),
+            "first_name": "Имя",
+            "last_name": "Фамилия",
+            "username": "Имя пользователя",
         }
         widgets = {
             "first_name": forms.TextInput(
                 attrs={
                     "required": True,
-                    "placeholder": _("First name"),
+                    "placeholder": "Имя",
                 }
             ),
             "last_name": forms.TextInput(
                 attrs={
                     "required": True,
-                    "placeholder": _("Last name"),
+                    "placeholder": "Фамилия",
                 }
             ),
             "username": forms.TextInput(
                 attrs={
                     "required": True,
-                    "placeholder": _("Username"),
+                    "placeholder": "Имя пользователя",
                 }
             ),
         }

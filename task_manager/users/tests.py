@@ -42,7 +42,7 @@ class UserCrudTests(TestCase):
         self.assertTrue(User.objects.filter(username="new_user").exists())
 
         messages = list(get_messages(response.wsgi_request))
-        self.assertIn("User created successfully", str(messages[0]))
+        self.assertIn("Пользователь успешно зарегистрирован", str(messages[0]))
 
     def test_user_update_changes_profile_and_redirects_to_index(self):
         self.client.login(username="user1", password="testpass123")  # NOSONAR
@@ -63,7 +63,7 @@ class UserCrudTests(TestCase):
         self.assertTrue(self.user1.check_password("newpass123"))
 
         messages = list(get_messages(response.wsgi_request))
-        self.assertIn("User updated successfully", str(messages[0]))
+        self.assertIn("Пользователь успешно изменен", str(messages[0]))
 
     def test_user_delete_removes_user_and_redirects_to_index(self):
         self.client.login(username="user2", password="testpass123")  # NOSONAR
@@ -91,7 +91,10 @@ class UserCrudTests(TestCase):
 
         self.assertTrue(User.objects.filter(pk=self.user1.pk).exists())
         messages = list(get_messages(response.wsgi_request))
-        self.assertIn("It is impossible to delete the user", str(messages[0]))
+        self.assertIn(
+            "Невозможно удалить пользователя, потому что он используется",
+            str(messages[0]),
+        )
 
     def test_user_update_requires_login(self):
         response = self.client.post(
@@ -99,7 +102,10 @@ class UserCrudTests(TestCase):
             follow=True,
         )
         messages = list(get_messages(response.wsgi_request))
-        self.assertIn("You are not logged in", str(messages[0]))
+        self.assertIn(
+            "Вы не авторизованы! Пожалуйста, выполните вход.",
+            str(messages[0]),
+        )
 
     def test_user_update_blocked_for_other_user(self):
         self.client.login(username="user2", password="testpass123")  # NOSONAR
@@ -109,7 +115,7 @@ class UserCrudTests(TestCase):
         )
         messages = list(get_messages(response.wsgi_request))
         expected_permission_message = (
-            "You do not have permission to perform this action."
+            "У вас нет прав для изменения другого пользователя."
         )
         self.assertIn(expected_permission_message, str(messages[0]))
 
@@ -119,7 +125,10 @@ class UserCrudTests(TestCase):
             follow=True,
         )
         messages = list(get_messages(response.wsgi_request))
-        self.assertIn("You are not logged in", str(messages[0]))
+        self.assertIn(
+            "Вы не авторизованы! Пожалуйста, выполните вход.",
+            str(messages[0]),
+        )
         self.assertTrue(User.objects.filter(pk=self.user1.pk).exists())
 
     def test_user_delete_blocked_for_other_user(self):
@@ -130,7 +139,7 @@ class UserCrudTests(TestCase):
         )
         messages = list(get_messages(response.wsgi_request))
         expected_permission_message = (
-            "You do not have permission to perform this action."
+            "У вас нет прав для изменения другого пользователя."
         )
         self.assertIn(expected_permission_message, str(messages[0]))
         self.assertTrue(User.objects.filter(pk=self.user2.pk).exists())
@@ -146,13 +155,13 @@ class UserCrudTests(TestCase):
         )
         self.assertEqual(response.wsgi_request.path, reverse("index"))
         messages = list(get_messages(response.wsgi_request))
-        self.assertIn("You are logged in", str(messages[0]))
+        self.assertIn("Вы залогинены", str(messages[0]))
 
     def test_logout_adds_message(self):
         self.client.login(username="user1", password="testpass123")  # NOSONAR
         response = self.client.post(reverse("logout"), follow=True)
         messages = list(get_messages(response.wsgi_request))
-        self.assertIn("You are logged out", str(messages[0]))
+        self.assertIn("Вы разлогинены", str(messages[0]))
         self.assertEqual(response.wsgi_request.path, reverse("index"))
 
     def test_registration_form_rejects_mismatched_passwords(self):
@@ -167,7 +176,10 @@ class UserCrudTests(TestCase):
         )
         self.assertFalse(form.is_valid())
         self.assertIn("password2", form.errors)
-        self.assertIn("didn", "".join(form.errors["password2"]).lower())
+        self.assertIn(
+            "введенные пароли не совпадают",
+            "".join(form.errors["password2"]).lower(),
+        )
 
     def test_registration_form_rejects_short_password(self):
         form = UserRegistrationForm(
@@ -180,7 +192,7 @@ class UserCrudTests(TestCase):
             },
         )
         self.assertFalse(form.is_valid())
-        self.assertIn("too short", str(form.errors))
+        self.assertIn("слишком короткий", str(form.errors))
 
     def test_update_form_prevents_duplicate_username(self):
         form = UserUpdateForm(
