@@ -7,7 +7,6 @@
 /db.sqlite3
 /manage.py
 /pytest.ini
-/build.sh
 /.pre-commit-config.yaml
 /.env.example
 /.coverage
