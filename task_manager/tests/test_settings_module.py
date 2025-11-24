@@ -114,6 +114,27 @@ def test_database_non_sqlite_branch(monkeypatch):
     assert module.DATABASES["default"]["NAME"] == "parsed"
 
 
+def test_database_test_url_used_when_testing(monkeypatch):
+    test_db = f"sqlite:///{settings.BASE_DIR / 'alt_test.sqlite3'}"
+    module = _load_settings_copy(
+        monkeypatch,
+        {
+            "PYTEST_RUNNING": "true",
+            "PYTEST_CURRENT_TEST": "1",
+            "TEST_DATABASE_URL": test_db,
+        },
+    )
+    assert module.DATABASES["default"]["NAME"].endswith("alt_test.sqlite3")
+
+
+def test_secret_key_uses_default_when_missing(monkeypatch):
+    module = _load_settings_copy(
+        monkeypatch,
+        {"SECRET_KEY": None, "DJANGO_SECRET_KEY": None},
+    )
+    assert module.SECRET_KEY == "dev-secret-key"
+
+
 def test_rollbar_not_configured_without_token(monkeypatch):
     module = _load_settings_copy(
         monkeypatch,
