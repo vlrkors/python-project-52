@@ -30,9 +30,7 @@ class CustomRollbarNotifierMiddleware(RollbarNotifierMiddleware):
         super().__init__(get_response)
 
     def get_extra_data(self, request, exc):
-        extra_data = dict()
-        extra_data['feature_flags'] = ['feature_1', 'feature_2']
-        return extra_data
+        return {"feature_flags": ["feature_1", "feature_2"]}
 
     def get_payload_data(self, request, exc):
         payload_data = dict()
