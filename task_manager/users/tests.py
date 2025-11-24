@@ -23,12 +23,12 @@ def test_user_create_form_mismatch_passwords():
     )
     assert not form.is_valid()
     errors = " ".join(form.errors["password2"])
-    assert "не совпадают" in errors or "match" in errors
+    assert "не совпадают" in errors or "match" in errors.lower()
 
 
 @pytest.mark.django_db
 def test_user_create_form_short_password():
-    short_pwd = "pw"
+    short_pwd = get_random_string(2)
     form = UserCreateForm(
         data={
             "first_name": "Short",
@@ -50,8 +50,8 @@ def test_user_create_form_short_and_mismatch_combined():
             "first_name": "Combo",
             "last_name": "User",
             "username": "combo",
-            "password1": "a",
-            "password2": "b",
+            "password1": get_random_string(1),
+            "password2": get_random_string(1),
         }
     )
     assert not form.is_valid()
