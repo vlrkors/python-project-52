@@ -71,13 +71,14 @@ def test_user_create_form_short_password():
 
 @pytest.mark.django_db
 def test_user_create_form_too_short_add_error(monkeypatch):
+    short_pwd = get_random_string(2)
     form = UserCreateForm(
         data={
             "first_name": "ShortAdd",
             "last_name": "Hook",
             "username": "short_add",
-            "password1": get_random_string(2),
-            "password2": get_random_string(2),
+            "password1": short_pwd,
+            "password2": short_pwd,
         }
     )
     called = {}
@@ -90,6 +91,9 @@ def test_user_create_form_too_short_add_error(monkeypatch):
     form.add_error = tracker
     assert not form.is_valid()
     assert any(field == "password2" for field, _ in called.get("calls", []))
+    # Убеждаемся, что form.save не падает, даже если пароль был коротким.
+    form.cleaned_data["password1"] = "valid_pwd"
+    form.save(commit=False)
 
 
 @pytest.mark.django_db
