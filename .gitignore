@@ -1,2 +1,5 @@
 .idea
 /.env
+/staticfiles/
+/django_bootstrap5/
+/whitenoise/
