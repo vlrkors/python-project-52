@@ -123,3 +123,51 @@ def test_task_update_requires_login(client):
     assert response.status_code == 200
     task.refresh_from_db()
     assert task.name == "To update"
+
+
+@pytest.mark.django_db
+def test_task_detail_shows_data(client):
+    status = Status.objects.create(name="Open")
+    author = User.objects.create_user(username="author", password="pwd")
+    task = Task.objects.create(name="Detail", status=status, author=author)
+    client.login(username="author", password="pwd")
+
+    response = client.get(reverse("task_show", args=[task.id]))
+    assert response.status_code == 200
+    assert "Detail" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_task_update_by_author(client):
+    status = Status.objects.create(name="Open")
+    author = User.objects.create_user(username="author", password="pwd")
+    task = Task.objects.create(name="Old", status=status, author=author)
+    client.login(username="author", password="pwd")
+
+    response = client.post(
+        reverse("task_update", args=[task.id]),
+        {"name": "New name", "status": status.id},
+        follow=True,
+    )
+    assert response.status_code == 200
+    task.refresh_from_db()
+    assert task.name == "New name"
+    messages = [m.message.lower() for m in get_messages(response.wsgi_request)]
+    assert any("updated" in msg or "успешно" in msg for msg in messages)
+
+
+@pytest.mark.django_db
+def test_task_delete_by_author(client):
+    status = Status.objects.create(name="Open")
+    author = User.objects.create_user(username="author", password="pwd")
+    task = Task.objects.create(name="To delete", status=status, author=author)
+    client.login(username="author", password="pwd")
+
+    response = client.post(
+        reverse("task_delete", args=[task.id]),
+        follow=True,
+    )
+    assert response.status_code == 200
+    assert not Task.objects.filter(id=task.id).exists()
+    messages = [m.message.lower() for m in get_messages(response.wsgi_request)]
+    assert any("deleted" in msg or "успешно" in msg for msg in messages)

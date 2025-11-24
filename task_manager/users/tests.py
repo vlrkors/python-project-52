@@ -27,6 +27,32 @@ def test_user_create_form_mismatch_passwords():
 
 
 @pytest.mark.django_db
+def test_user_create_form_mismatch_add_error_called(monkeypatch):
+    pwd1 = get_random_string(6)
+    pwd2 = pwd1 + "y"
+    form = UserCreateForm(
+        data={
+            "first_name": "Mismatch",
+            "last_name": "Hook",
+            "username": "mismatch_hook",
+            "password1": pwd1,
+            "password2": pwd2,
+        }
+    )
+    called = {}
+
+    def tracker(field, message):
+        called["field"] = field
+        called["message"] = message
+        return orig_add_error(field, message)
+
+    orig_add_error = form.add_error
+    form.add_error = tracker
+    assert not form.is_valid()
+    assert called.get("field") == "password2"
+
+
+@pytest.mark.django_db
 def test_user_create_form_short_password():
     short_pwd = get_random_string(2)
     form = UserCreateForm(
@@ -41,6 +67,29 @@ def test_user_create_form_short_password():
     assert not form.is_valid()
     errors = " ".join(form.errors["password2"])
     assert "3" in errors or "short" in errors.lower()
+
+
+@pytest.mark.django_db
+def test_user_create_form_too_short_add_error(monkeypatch):
+    form = UserCreateForm(
+        data={
+            "first_name": "ShortAdd",
+            "last_name": "Hook",
+            "username": "short_add",
+            "password1": "aa",
+            "password2": "aa",
+        }
+    )
+    called = {}
+
+    def tracker(field, message):
+        called.setdefault("calls", []).append((field, message))
+        return orig_add_error(field, message)
+
+    orig_add_error = form.add_error
+    form.add_error = tracker
+    assert not form.is_valid()
+    assert any(field == "password2" for field, _ in called.get("calls", []))
 
 
 @pytest.mark.django_db
