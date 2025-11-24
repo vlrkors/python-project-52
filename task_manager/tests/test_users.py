@@ -2,6 +2,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.messages import get_messages
 from django.urls import reverse
+from django.utils.crypto import get_random_string
 
 from task_manager.statuses.models import Status
 from task_manager.tasks.models import Task
@@ -12,13 +13,15 @@ User = get_user_model()
 
 @pytest.mark.django_db
 def test_user_create_form_validation_errors():
+    pwd1 = get_random_string(8)
+    pwd2 = get_random_string(8)
     mismatch_form = UserCreateForm(
         data={
             "first_name": "John",
             "last_name": "Doe",
             "username": "johndoe",
-            "password1": "abc",
-            "password2": "abd",
+            "password1": pwd1,
+            "password2": pwd2,
         }
     )
     assert not mismatch_form.is_valid()
@@ -29,8 +32,8 @@ def test_user_create_form_validation_errors():
             "first_name": "John",
             "last_name": "Doe",
             "username": "john-short",
-            "password1": "12",
-            "password2": "12",
+            "password1": get_random_string(2),
+            "password2": get_random_string(2),
         }
     )
     assert not short_form.is_valid()
