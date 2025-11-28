@@ -3,7 +3,7 @@ from django import forms
 from django.test import RequestFactory
 from django.urls import reverse
 
-from django_bootstrap5.templatetags.django_bootstrap5 import (
+from task_manager.django_bootstrap5.templatetags import (
     bootstrap_field,
     bootstrap_form,
     bootstrap_messages,
