@@ -21,8 +21,6 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 IS_TESTING = (
@@ -30,6 +28,9 @@ IS_TESTING = (
     or os.getenv("PYTEST_RUNNING") == "true"
     or any("pytest" in arg for arg in sys.argv)
 )
+
+if not IS_TESTING:
+    load_dotenv()
 
 
 def _to_bool(value: str, default: bool = False) -> bool:
