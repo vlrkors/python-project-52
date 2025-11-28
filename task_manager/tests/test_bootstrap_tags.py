@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.test import RequestFactory
 
-from django_bootstrap5.templatetags import django_bootstrap5
+from task_manager.django_bootstrap5.templatetags import django_bootstrap5
 
 
 class SampleForm(forms.Form):
