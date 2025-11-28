@@ -89,3 +89,23 @@ def test_rollbar_payload_includes_all_fields():
     payload = middleware.get_payload_data(_build_request(user), Exception())
     assert payload["person"]["id"] == 42
     assert payload["person"]["email"] == email
+
+
+def test_rollbar_init_not_called_without_access_token(monkeypatch):
+    called = {"ran": False}
+
+    def fake_init(self, get_response=None):
+        called["ran"] = True
+
+    monkeypatch.setattr(
+        "task_manager.rollbar_middleware.RollbarNotifierMiddleware.__init__",
+        fake_init,
+    )
+    monkeypatch.setattr(
+        "task_manager.rollbar_middleware.settings",
+        SimpleNamespace(ROLLBAR=None),
+    )
+
+    middleware = _build_middleware()
+    assert called["ran"] is False
+    assert middleware.settings == {}
